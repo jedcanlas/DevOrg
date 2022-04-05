@@ -1,0 +1,20 @@
+<apex:page controller="ExportController" sidebar="false">
+
+    <apex:form >
+        <apex:pageMessages />
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Load Data" action="{!fetchData}" rerender="" />
+                <apex:commandButton value="Export" onclick="return confirm('Do you want to export?');"
+                    action="{!export}" rendered="{!isExport}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!lstwrapper}" var="x">
+                <apex:column headerValue="accName">
+                    {!x.accName}
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+
+
+</apex:page>

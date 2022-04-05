@@ -1,0 +1,13 @@
+<apex:page controller="CSVParserController" sidebar="false" showHeader="false">
+    <apex:form >
+        <apex:inputFile value="{!contentFile}" filename="{!nameFile}"></apex:inputFile>   
+        
+        <apex:commandButton action="{!Parse}" value="Parse"/>
+        
+        <apex:inputtextarea cols="40" rows="20" value="{!textToParse}"  />
+        <apex:inputtextarea cols="40" rows="20" id="result" value="{!parsedText}"/>     
+                
+        
+        
+    </apex:form>
+</apex:page>

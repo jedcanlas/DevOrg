@@ -1,0 +1,135 @@
+<apex:page showHeader="false" sidebar="false" controller="CalendarController">
+    
+    <!--apex:includeScript value="{!URLFOR($Resource.calendar, '/js/index.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.calendar, '/js/bootstrap.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.calendar, '/js/jquery.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.calendar, '/js/kendo.js')}"/>
+
+<apex:stylesheet value="{!URLFOR($Resource.calendar, '/css/styles.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.calendar, '/css/bootstrap.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.calendar, '/css/kendocommonmaterial.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.calendar, '/css/kendomaterial.css')}"/-->
+    
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2015.3.1111/styles/kendo.common-material.min.css"/>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2015.3.1111/styles/kendo.material.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <script src="https://kendo.cdn.telerik.com/2015.3.1111/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2015.3.1111/js/kendo.all.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+    
+    
+    <style>
+        .k-scheduler-header .k-event{
+            //width:60px !important;
+            //height:20px !important;
+            //border-radius:50%;
+            //padding:0;
+            //position:absolute;
+            //bottom:0;
+        }
+    
+    .k-event-template,k-event-actions{
+        display:block;
+        padding:0;
+    }
+    
+    </style>
+    
+    
+    <script type="text/javascript">
+        $(function() {
+        	getRemoteAccount();             
+    	});
+        
+        function getRemoteAccount() {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.CalendarController.getAccount}',
+            //accountName, 
+            function(result, event){
+                if (event.status) {
+                    var eventArray = new Array();
+                    var index;
+                    for (index = 0; index < result.length; ++index) {
+                        var events = {
+                            id: result[index].Id,
+                            start: new Date(result[index].Start__c),
+                            end: new Date(result[index].End__c),
+                            title: result[index].Title__c,
+                            description: 'sample desc'
+                        };
+                        
+                        eventArray.push(events);
+                    }
+                    
+                    
+                    
+                    
+                    
+                    $("#scheduler").kendoScheduler({
+                        date: new Date().toLocaleDateString(), 
+                        
+                        views: [
+                            "day",
+                            { type: "workWeek", selected: true },
+                            "week",
+                            "month",
+                            "agenda",
+                            { type: "timeline", eventHeight: 50}
+                        ],
+                        timezone: "Etc/UTC",
+                        dataSource: eventArray,
+                        editable: false
+                        
+                    });
+                    
+                    $("#scheduler").kendoTooltip({
+                        filter: ".k-event:not(.k-event-drag-hint) > div, .k-task",
+                        position: "top",
+                        width: 250,
+                        content: kendo.template($('#template').html())
+                    });
+                    
+                    
+                    
+                } else if (event.type === 'exception') {
+                    document.getElementById("responseErrors").innerHTML = 
+                        event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                } else {
+                    document.getElementById("responseErrors").innerHTML = event.message;
+                }
+            }, 
+            {escape: true}
+        );
+    }
+    
+    
+    </script>
+    <html>
+        
+        
+        
+        
+        
+        
+        
+        <div id="scheduler"></div>
+        
+        <script id="template" type="text/x-kendo-template">
+        #var element = target.is(".k-task") ? target : target.parent();#
+        #var uid = element.attr("data-uid");#
+        #var scheduler = target.closest("[data-role=scheduler]").data("kendoScheduler");# 
+        #var model = scheduler.occurrenceByUid(uid);# 
+        
+        #if(model) {#
+        <strong>event start:</strong> #=kendo.format('{0:d}',model.start)#<br />
+            <strong>event end:</strong> #=kendo.format('{0:d}',model.end)#<br />
+                <strong>event description:</strong> #=model.description#<br />
+                    #} else {#
+                <strong>No event data is available</strong>
+                #}#
+                </script>
+        
+        
+    </html>
+</apex:page>

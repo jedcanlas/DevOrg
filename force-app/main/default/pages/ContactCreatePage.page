@@ -1,0 +1,45 @@
+<apex:page controller="ContactCreateController" id="test">  
+  <apex:sectionHeader title="Visualforce Example" subtitle="Create a Contact"/>
+    <script type="text/javascript">
+    var fNameVal,lNameVal;
+    
+    function checkFields(){
+    fNameVal = document.getElementById('test:test1:test2:test3:fName').value;
+    lNameVal = document.getElementById('test:test1:test2:test3:lName').value;
+    console.log('fName-----        ' + fNameVal);
+    console.log('lName-----        ' + lNameVal);
+    validateFields();
+    }
+    
+    function validateFields(){
+    
+    if(fNameVal !== '' && lNameVal !== ''){
+        console.log('VALIDATED');
+        doSave();
+    }
+    
+    }
+    
+    </script>
+  <apex:form id="test1">
+  <apex:actionFunction action="{!save}" name="doSave"/>
+
+    <apex:pageMessages /> <!-- this is where the error messages will appear -->
+    <apex:pageBlock title="Contact Info"  id="test2">
+
+      <apex:pageBlockButtons >
+        <apex:commandButton action="{!save}" value="Save"/>
+      </apex:pageBlockButtons>
+
+      <apex:pageBlockSection showHeader="false" columns="2" id="test3">
+        <!--<input type="text" value="{!contact.firstName}" id="fName1" onkeyup="checkFields()"/>-->
+        <!--<input type="text" value="{!contact.lastName}" id="lName1" onkeyup="checkFields()"/>-->
+        <apex:inputField value="{!contact.firstName}" id="fName" onChange="checkFields()"/>
+
+        <apex:inputField value="{!contact.lastName}" id="lName" onChange="checkFields()"/>
+        <!-- <apex:inputField value="{!contact.email}" /> -->
+      </apex:pageBlockSection>
+
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

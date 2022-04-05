@@ -1,0 +1,23 @@
+<apex:page controller="jsActionFunctionController" >
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+
+ <apex:form >
+  <apex:actionfunction name="getAccountsByName" action="{!getAccountsByName}" rerender="resultArea">
+   <apex:param name="name" value="" assignTo="{!name}"/>
+  </apex:actionfunction>
+                
+  <script type="text/javascript"> 
+   j$=jQuery.noConflict();
+   j$(document).ready(function(){ 
+    getAccountsByName("sForce");
+   });
+  </script>
+                
+  <apex:outputPanel id="resultArea" >
+   <apex:repeat var="a" value="{!listOfAccounts}" >
+    <apex:outputLabel value="{!a.id}, {!a.name}" /> <br/>
+   </apex:repeat>
+  </apex:outputPanel>
+                
+ </apex:form>
+</apex:page>

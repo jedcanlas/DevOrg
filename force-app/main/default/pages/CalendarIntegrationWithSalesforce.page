@@ -1,0 +1,115 @@
+<apex:page showHeader="false" sidebar="false">
+    
+    
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2015.3.1111/styles/kendo.common-material.min.css"/>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2015.3.1111/styles/kendo.material.min.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <script src="https://kendo.cdn.telerik.com/2015.3.1111/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2015.3.1111/js/kendo.all.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+    
+    
+    <style>
+        .k-scheduler-header .k-event{
+            width:60px !important;
+            height:20px !important;
+            border-radius:50%;
+            padding:0;
+            position:absolute;
+            bottom:0;
+        }
+    
+    .k-event-template,k-event-actions{
+        display:block;
+        height: 40px;
+        padding:0;
+    }
+    
+    </style>
+    
+    <script>
+        $(function() {
+           $("#scheduler").kendoScheduler({
+  date: new Date("2013/6/6"),
+  dataSource: {
+    batch: true,
+    transport: {
+      read: {
+        url: "https://demos.telerik.com/kendo-ui/service/tasks",
+        dataType: "jsonp"
+      },
+      update: {
+        url: "https://demos.telerik.com/kendo-ui/service/tasks/update",
+        dataType: "jsonp"
+      },
+      create: {
+        url: "https://demos.telerik.com/kendo-ui/service/tasks/create",
+        dataType: "jsonp"
+      },
+      destroy: {
+        url: "https://demos.telerik.com/kendo-ui/service/tasks/destroy",
+        dataType: "jsonp"
+      },
+      parameterMap: function(options, operation) {
+        if (operation !== "read" && options.models) {
+          return {models: kendo.stringify(options.models)};
+        }
+      }
+    },
+    schema: {
+       model: {
+         id: "ID",
+         fields: {
+           ID: { type: "number" },
+           title: { field: "Title", defaultValue: "No title", validation: { required: true } },
+           start: { type: "date", field: "Start" },
+           end: { type: "date", field: "End" },
+           description: { field: "Description" },
+           recurrenceId: { from: "RecurrenceID" },
+           recurrenceRule: { from: "RecurrenceRule" },
+           recurrenceException: { from: "RecurrenceException" },
+           ownerId: { field: "OwnerID", defaultValue: 1 },
+           isAllDay: { type: "boolean", field: "IsAllDay" }
+         }
+       }
+     }
+  }
+});
+            
+            $("#scheduler").kendoTooltip({
+                filter: ".k-event:not(.k-event-drag-hint) > div, .k-task",
+                position: "top",
+                width: 250,
+                content: kendo.template($('#template').html())
+            });
+        });
+    </script>
+    <html>
+        
+        
+        
+        
+        
+        
+        
+        <div id="scheduler">a</div>
+        
+        <script id="template" type="text/x-kendo-template">
+        #var element = target.is(".k-task") ? target : target.parent();#
+        #var uid = element.attr("data-uid");#
+        #var scheduler = target.closest("[data-role=scheduler]").data("kendoScheduler");#
+        #var model = scheduler.occurrenceByUid(uid);# 
+        
+        #if(model) {#
+        <strong>event start:</strong> #=kendo.format('{0:d}',model.start)#<br />
+            <strong>event end:</strong> #=kendo.format('{0:d}',model.end)#<br />
+                <strong>event description:</strong> #=model.description#<br />
+                    #} else {#
+                <strong>No event data is available</strong>
+                #}#
+                </script>
+        
+        
+    </html>
+</apex:page>

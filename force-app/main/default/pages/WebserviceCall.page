@@ -1,0 +1,13 @@
+<apex:page controller="WebserviceCallController">
+    <apex:form id="dataForm">
+        <apex:pageBlock >
+        <apex:outputLabel >Endpoint URL: {!strResponse}</apex:outputLabel>
+        <!-- <apex:inputtextarea /> -->
+            <apex:pageblocksection >
+                
+                <apex:commandButton value="Submit" action="getCalloutResponseContents()" reRender="dataForm"/>
+                <apex:commandButton value="Cancel"/>
+            </apex:pageblocksection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

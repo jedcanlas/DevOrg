@@ -1,0 +1,33 @@
+<apex:page controller="wrapperClassController">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Process Selected" action="{!processSelected}" rerender="table,tableSelected,tableSelected2"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!selectedContacts}" var="c" id="tableSelected">
+                <apex:column value="{!c.Name}" />
+                <apex:column value="{!c.Email}" />
+                <apex:column value="{!c.Phone}" />    
+            </apex:pageBlockTable>
+            
+            <apex:outputPanel id="tableSelected2">                
+                <apex:repeat value="{!selectedContacts}" var="c">
+                    
+                    <td>{!c.name}</td>
+                    
+                </apex:repeat>
+            </apex:outputPanel>
+            <!-- In our table we are displaying the cContact records -->
+            <apex:pageBlockTable value="{!contacts}" var="c" id="table">
+                <apex:column >
+                    <!-- This is our selected Boolean property in our wrapper class -->
+                    <apex:inputCheckbox value="{!c.selected}"/>
+                </apex:column>
+                <!-- This is how we access the contact values within our cContact container/wrapper -->
+                <apex:column value="{!c.con.Name}" />
+                <apex:column value="{!c.con.Email}" />
+                <apex:column value="{!c.con.Phone}" />
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

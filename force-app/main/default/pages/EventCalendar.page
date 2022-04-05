@@ -1,0 +1,390 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="true" controller="EventCalendarController" cache="true"  
+    id="pageId">
+
+    <html>
+
+    <head>
+        <style>
+            .table-borderless tbody tr td,
+            .table-borderless tbody tr th,
+            .table-borderless thead tr th,
+            .table-borderless thead tr td,
+            .table-borderless tfoot tr th,
+            .table-borderless tfoot tr td {
+                border: none !important;
+                ;
+            }
+            
+            a.title {
+                text-decoration: none;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 10px;
+                color: #CCCCCC;
+            }
+            
+            #light {
+                width: 960px;
+                height: 575px;
+                overflow: hidden;
+                position: fixed;
+                left: 19%;
+                top: 5%;
+                overflow: auto;
+            }
+            
+            .black_overlay {
+                display: none;
+                position: fixed;
+                top: 0%;
+                left: 0%;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                //z-index:1001;
+                -moz-opacity: 0.8;
+                opacity: .80;
+                filter: alpha(opacity=80);
+            }
+            
+            .white_content {
+                display: block;
+                position: absolute;
+                top: 25%;
+                left: 20%;
+                width: 60%;
+                height: 60%;
+                padding: 1%; //
+                border: 2px solid blue;
+                background-color: white;
+                //z-index: 1002;
+                overflow: auto;
+            }
+            
+            .container {
+                display: flex;
+                text-align: justify;
+                justify-content: space-between;
+            }
+            
+            button, html input[type=button], input[type=reset], input[type=submit] {
+                width: 40%;
+            }
+
+        </style>
+        <title></title>
+
+        <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2015.3.1111/styles/kendo.common-material.min.css"/>
+        <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2015.3.1111/styles/kendo.material.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <script src="https://kendo.cdn.telerik.com/2015.3.1111/js/jquery.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2015.3.1111/js/kendo.all.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    </head>
+
+    <body>
+
+
+    <apex:form id="formControlId">
+        <table class="container">
+            <div class="container">
+                <tr >
+                    <th>ALL</th>            
+                    <th>GM</th>
+                    <th>T2/TB</th> 
+                    <th>T2</th>
+                    <th>TB</th>
+                    <th>EKH</th>
+                    <th>SL</th>
+                    <th>PL</th>
+                    <th>NF</th>
+            <th style="text-align: center">Account</th>
+            <th style="text-align: center">Region</th>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="checkBoxes" value="ALL" style="zoom:1.2"
+                            checked="true" /></td>
+                    <td><input type="checkbox" class="checkBoxes" value="GM" style="zoom:1.2"
+                            checked="true" /></td>
+                    <td><input type="checkbox" class="checkBoxes" value="T2/TB" style="zoom:1.2"
+                            checked="true" /></td>
+                    <td><input type="checkbox" class="checkBoxes" value="T2" style="zoom:1.2"
+                            checked="true" /></td>
+                    <td><input type="checkbox" class="checkBoxes" value="TB" style="zoom:1.2"
+                            checked="true" /></td>
+                    <td><input type="checkbox" class="checkBoxes" value="EKH" style="zoom:1.2"
+                            checked="true" /></td>
+                    <td><input type="checkbox" class="checkBoxes" value="SL" style="zoom:1.2"
+                            checked="true" /></td>
+                    <td><input type="checkbox" class="checkBoxes" value="PL" style="zoom:1.2"
+                            checked="true" /></td>
+                    <td><input type="checkbox" class="checkBoxes" value="NF" style="zoom:1.2"
+                            checked="true" /></td>
+                            
+                    <td><apex:inputField value="{!SC.Account__c}" id="accSearch" onkeyup="edValueKeyPress();" onchange="edValueKeyPress();"/></td>
+                    <td><apex:inputField value="{!ACC.Region__c}" id="accRegionSearch" onchange="edValueRegion();"/></td>
+                </tr>
+            </div>
+        </table>
+</apex:form>
+
+
+        <style>
+            .datePicker {
+                z-index: 99999;
+            }
+            
+            .modal {
+                background-color: white;
+                border-width: 2px;
+                border-style: solid;
+                z-index: 9999;
+                left: 50%;
+                padding: 10px;
+                //position: absolute;
+                width: 500px;
+                margin-left: -250px;
+                top: 100px;
+                //overflow: auto;
+                display: block;
+                position: relative;
+                height: auto;
+                min-height: 100% !important;
+            }
+            
+            .modalBackground {
+                background-color: black;
+                opacity: 0.20;
+                filter: alpha(opacity=20);
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: 9998;
+                //display: block;
+            }
+
+        </style>
+
+        <!-- PANEL FOR CREATE WORKBOOK -->
+        <apex:form id="formId">
+            
+            <apex:outputPanel id="scPopup">
+                <apex:outputPanel styleClass="modalBackground" rendered="{!isCreate}"/>
+                <apex:outputPanel styleClass="modal" rendered="{!isCreate}">
+                    <apex:pageBlock >
+                        <table>
+                            <apex:repeat value="{!$ObjectType.Sales_Calendar__c.FieldSets.SC_Fieldset}" var="field">
+                                <th colspan="2">
+                                    <tr>
+                                        <td colspan="1">
+                                            <apex:outputLabel value="{!field.Label}" />
+                                        </td>
+                                        <td colspan="1">
+                                            <apex:inputField value="{!SC[field.fieldPath]}" required="{!OR(field.required, field.dbrequired)}"
+                                            />
+                                        </td>
+                                    </tr>
+                                </th>
+                            </apex:repeat>
+                        </table>
+                    </apex:pageBlock>
+                    <apex:commandButton value="Submit" action="{!createOffer}" rerender="scPopup" id="createOfferBtnId"
+                        oncomplete="$('#refreshOffers').click();" />
+                    <apex:commandButton value="Cancel" action="{!hidePopup}" rerender="scPopup" immediate="true"
+                    />
+                </apex:outputPanel>
+            </apex:outputPanel>
+                    <div style="text-align: center">
+                        <br/>
+                        <apex:commandButton value="Create Offer" action="{!showPopup}" rerender="scPopup,formId"/>
+                    </div>
+        </apex:form>
+        ​
+        <button id="refreshOffers" class="btn btn-success btn-xs" onClick="return false;"
+            style="display: none">Show Offers</button>
+
+        <div id="scheduler"></div>
+
+
+        <script>
+        var brand = new Array();
+        var accStr = '';
+        var region = '';
+        
+            $(document).ready(function() {
+
+
+
+                
+                $("input:checkbox:checked").each(function() {
+                    if (this.checked) {
+                        brand.push(this.value);
+                    }
+                }); //end
+
+
+                $("#scheduler").kendoScheduler({
+                    date: new Date().toLocaleDateString(),
+                    showWorkHours: true,
+					workWeekStart: 0,
+                    workWeekEnd: 4,
+                    //height: 600,
+                    views: [
+                        "day", {
+                            type: "workWeek",
+                            selected: true
+                        },
+                        "week",
+                        "month",
+                        "agenda", {
+                            type: "timeline",
+                            eventHeight: 50
+                        }
+                    ],
+                    timezone: "Etc/UTC",
+                    editable: false,
+                    eventTemplate: $("#myEvents").html()
+
+                }); //end
+
+                $("#scheduler").kendoTooltip({
+                    filter: ".k-event:not(.k-event-drag-hint) > div, .k-task",
+                    position: "top",
+                    width: 250,
+                    content: kendo.template($('#template').html())
+                }); //end
+
+                $('#refreshOffers').click(function() {
+                    var brand = new Array();
+                    $("input:checkbox:checked").each(
+                        function() {
+                            if (this.checked) {
+                                brand.push(this.value);
+                            }
+                        }); //end
+
+                    var scheduler = $("#scheduler").data(
+                        "kendoScheduler");
+                    scheduler.dataSource.data([]);
+
+                    //var scheduler= scheduler.dataSource;
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.EventCalendarController.getData}',
+                        brand,
+                        accStr,
+                        region,
+                        function(result, event) {
+                            if (event.status) {
+                                var index;
+                                for (index = 0; index <
+                                    result.length; ++
+                                    index) {
+                                    scheduler.dataSource
+                                        .add({
+                                            id: result[
+                                                index
+                                            ].Id,
+                                            recId: result[
+                                                index
+                                            ].Id,
+                                            start: new Date(
+                                                result[
+                                                    index
+                                                ]
+                                                .Offer_Start_Date__c
+                                            ),
+                                            end: new Date(
+                                                result[
+                                                    index
+                                                ]
+                                                .Offer_End_Date__c
+                                            ),
+                                            title: result[
+                                                index
+                                            ].Offer_Name__c,
+                                            description: result[
+                                                index
+                                            ].Offer_Description__c
+                                        });
+                                }
+                            }
+                        }
+                    );
+                    scheduler.dataSource.read();
+                }); //end
+
+
+
+
+                $(function() {
+                    $('#refreshOffers').click();
+                }); //end
+
+                $('input[type=checkbox]').change(function() {
+                    $('#refreshOffers').click();
+                }); //end
+
+                $('#pageId:formId:createOfferBtnId').click(function() {
+                    $('#refreshOffers').click();
+                }); //end
+                
+
+                
+
+
+            });
+        
+        function edValueKeyPress()
+                {
+                    var str = document.getElementById("pageId:formControlId:accSearch");
+                    accStr = str.value;
+                
+                    console.log(accStr);
+                    $('#refreshOffers').click();
+                }
+        function edValueRegion()
+                {
+                    var str = document.getElementById("pageId:formControlId:accRegionSearch");
+                    region = str.value;
+                
+                    console.log(region);
+                    $('#refreshOffers').click();
+                }
+        
+        </script>
+        <script id="myEvents" type="text/x-kendo-template">
+
+            <a href="/#:recId#" target="blank_">
+                <div style="height:80%;width:80%;color: white">
+
+                    <tr>
+                        <td>
+                            #:title# - #:description#
+                        </td>
+                    </tr>
+
+
+                </div>
+            </a>
+
+        </script>
+
+        <script id="template" type="text/x-kendo-template">
+            #var element = target.is(".k-task") ? target : target.parent();# #var uid = element.attr("data-uid");#
+            #var scheduler = target.closest("[data-role=scheduler]").data("kendoScheduler");#
+            #var model = scheduler.occurrenceByUid(uid);# #if(model) {#
+            <strong>event start:</strong> #=kendo.format('{0:d}',model.start)#<br/>
+            <strong>event end:</strong> #=kendo.format('{0:d}',model.end)#<br />
+            <strong>event description:</strong> #=model.description#<br /> 
+            #} else{#
+            <strong>No event data is available</strong> #}#
+        </script>
+    </body>
+
+    </html>
+
+
+
+</apex:page>

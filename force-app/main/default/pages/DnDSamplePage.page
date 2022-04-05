@@ -1,0 +1,745 @@
+<apex:page controller="DnDSampleController" sidebar="false" lightningStylesheets="false">
+    
+    <script type="text/javascript"
+    src="{!URLFOR($Resource.JQueryLibs, 'jquery.min.js')}"/>
+        <script type="text/javascript"
+        src="{!URLFOR($Resource.masonry, 'js/isotope.pkgd.min.js')}"/>
+            <script type="text/javascript"
+            src="{!URLFOR($Resource.JQueryLibs, 'jquery-ui.js')}"/>
+                <script type="text/javascript"
+                src="{!URLFOR($Resource.HighChartsJS, 'highcharts.js')}"/>
+                    <script type="text/javascript"
+                    src="{!URLFOR($Resource.HighChartsJS, 'highcharts-more.js')}"/>
+  
+
+                                
+                                <style>
+                                * {
+                                webkit-box-sizing: initial;
+                                -moz-box-sizing: initial;
+                                box-sizing: initial;
+                            }
+                            
+                            body {
+                                font-size: 12px;
+                                line-height: normal;
+                            }
+    table {
+        border-collapse: separate;
+        border-spacing: 2px;
+    }
+    
+    label {
+        font-weight: initial;
+        display:;
+    }
+    
+    
+    .form-control {
+        border-radius: 0px;
+    }
+    
+    .form-group {
+        margin-bottom: 0px !important;
+        border-radius: 0px;
+    }
+    
+    .form-group.focus .form-control, .form-control:focus {
+        border-color: #34495e;
+    }
+    
+
+    /* ---- tiles ---- */
+    .item {
+        width: 250px;
+        height: 105px;
+        float: left;
+        margin-bottom: 10px;
+        background: #E6ECF4;
+        margin: 5px;
+        border-radius: 0px;
+    }
+    
+
+    
+    <!-- jed bucket styles -->        
+    .item.StageA {
+        background: #84c1e0;
+    } 
+    
+    .item.StageB {
+        background: #42A2D0;
+    } 
+    
+    .item.StageC {
+        background: #236b8d;
+    }         
+    
+    #StageA_SnapPanel {
+    background-color: #84c1e0;
+    }
+    
+    #StageB_SnapPanel {
+    background-color: #42A2D0;
+    }
+    
+    #StageC_SnapPanel {
+    background-color: #236b8d;
+    }        
+    <!-- end -->
+        
+        
+        
+    
+    .item, .item td {
+        color: white;
+    }
+    
+    
+    
+    
+    .item .tileFirstCol {
+        width: 20px;
+    }
+    
+    .item .tileFirstCol img {
+        height: auto;
+        width: 20px;
+    }
+    
+    .item .tileBottomRow {
+        position: absolute;
+        bottom: 0;
+        padding-bottom: 10px;
+        width: 100%;
+    }
+    
+    .item .tileBottomRow .lastActivityDate {
+        float: right;
+        padding-right: 15px;
+        padding-bottom: 2px;
+        font-size: 10px;
+    }
+    
+    .item .tileBottomRow .totalPlanAssets {
+        float: left;
+        padding-left: 13px;
+        font-size: 10px;
+    }
+    
+    #opportunitytListPanel {
+    background-color: #E6ECF4;
+    }
+    
+    #tiersContainer {
+    font-size: 25px;
+    font-variant: small-caps;
+    font-weight: bold;
+    height: 100%;
+    text-shadow: 2px 2px gray;
+    width: 100%;
+    }
+    
+
+    
+    #tiersContainer td {
+    width: 100%;
+    height: 15px;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    }
+    
+    .snapPanelTotals {
+        font-variant: normal;
+        font-size: 11px;
+        text-shadow: none;
+    }
+    
+    .snapPanelTotals label {
+        font-size: 11px;
+    }
+    
+    .snapPanelTotals td {
+        height: 11px !important;
+    }
+    
+    
+
+    
+    .drag-helper {
+        opacity: .65 !important;
+    }
+    
+    .snapPanelHover {
+        background-color: lightblue !important;
+        border: 2px dashed #42A2D0;
+    }
+    
+    .tierBanner {
+        width: 6px;
+        height: 105px;
+        position: absolute;
+        display: inline-block;
+    }
+    
+    
+    </style>
+    
+    <style>
+    label {
+        font-size: 14px;
+    }
+    
+    #tabbedPanel {
+    padding: 0px;
+    }
+    
+    #tabbedPanel .ui-tabs-nav {
+    background: transparent;
+    border-width: 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    }
+    
+    #tabbedPanel .ui-tabs-panel {
+    margin: 0em 0.2em 0.2em 0.2em;
+    }
+    
+    #tabbedPanel .ui-tabs .ui-tabs-nav li {
+    margin-left: 0.05em;
+    margin-bottom: -1px;
+    }
+    
+    .tabLabel {
+        background: #42A2D0;
+        display: table;
+        height: 45px;
+    }
+    
+    .tabBottom {
+        background-color: #42A2D0;
+        padding-top: 20px;
+        border-left: 1px solid #aaaaaa;
+        border-right: 1px solid #aaaaaa;
+        border-bottom: 1px solid #aaaaaa;
+    }
+    
+    .oppRecordMainPanel {
+        background-color: #E6ECF4;
+        padding: 15px;
+    }
+    
+    .oppRecordMainPanel .oppName {
+        font-size: 16px;
+        color: #8B8E92;
+        text-decoration: underline;
+    }
+    
+    .oppRecordMainPanel .instClientStatus {
+        font-size: 14px;
+        font-style: italic;
+        color: #8B8E92;
+    }
+    
+    .oppRecordMainPanel .oppName:HOVER {
+        text-decoration: none;
+        color: #8B8E92;
+    }
+    
+    .oppRecordMainPanel .oppContactField {
+        font-size: 16px;
+        color: #A1A8AD;
+        vertical-align: middle;
+    }
+    
+    .oppDetailHeaderLink, .oppDetailHeaderLinka {
+        color: #42A2D0;
+        font-weight: bold;
+        padding-left: 15px;
+        font-size: 5x;
+    }
+    
+    .oppDetailHeaderLink:FIRST-CHILD {
+        padding-left: 0px;
+    }
+    
+    .oppDetailHeaderLink:HOVER {
+        cursor: pointer;
+    }
+    
+    .oppDetailHeaderLink a {
+        color: #42A2D0;
+    }
+    
+    .oppDetailHeaderLink a:HOVER {
+        text-decoration: none;
+        color: #42A2D0;
+    }
+    
+    .oppDetailHeaderLink.selected {
+        color: #34495e;
+    }
+    
+    .topics .k-button span a {
+        color: white;
+    }
+    
+    .k-icon.k-delete {
+        height: 18px;
+    }
+    
+    .oppTitleImg {
+        width: 40px;
+        height: 40px;
+        background-repeat: no-repeat;
+        background-size: 40px;
+        background-position: center center;
+        display: inline-block;
+    }
+    
+       
+    .hidePanel {
+        display: none;
+    }
+    
+    .showPanel {
+        display: inline-block;
+    }
+    
+    
+    
+    .loadingStyle {
+        background-color: #000000;
+        opacity: 0.8;
+        border: 2px solid;
+        border-radius: 0px;
+        -moz-border-radius: 5px; /* Firefox 3.6 and earlier */
+        display: block;
+        height: 40px;
+        width: 150px;
+        position: fixed;
+        text-align: center;
+        vertical-align: middle;
+        left: 50%;
+        top: 50%;
+        padding: 5px;
+        z-index: 1000;
+        webkit-box-sizing: initial;
+        -moz-box-sizing: initial;
+        box-sizing: initial;
+    }
+    </style>
+    
+
+
+    
+    <script>
+        var isUsingTablet = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));        
+    </script>
+    
+
+    
+    <script type="text/javascript">   
+    var tabCounter = 0;
+    var openedOppTabs = [];        
+    var notesByOppId = {};         
+    currentTopicsByOppId = {}; 
+    
+    
+    function makeOppDraggable(opp) {
+        $( opp ).draggable({
+            snap: ".snapPanel",
+            revert: "invalid",
+            helper: function () {
+                // We removeAttr('style') to get rid of the transform css that isotope added.
+                return $(this).clone().removeAttr('style').removeClass('isotope-item').addClass('drag-helper').appendTo('body');
+            },
+            start: function () {
+                $(this).hide();
+            },
+            stop: function () {
+                $(this).show();                                       
+            },
+            zIndex: 100
+        });
+    }
+    
+    function makeSnapPanelDroppable(panel) {
+        $( panel ).droppable({
+            hoverClass: "snapPanelHover",
+            drop: function (event, ui) {
+                var $this = $(this);
+                // We removeAttr('style') to get rid of the position:absolute that draggable adds
+                // Then we append a clone so that we can use isotope's convenient remove() method.
+                // By default clone doesn't include data...have a look at the docs if you have trouble                        
+                
+                // Clone the element
+                var $opp = ui.draggable.clone().removeAttr('style').removeClass('.item');                    
+                
+                // Remove the Opp from the old Panel
+                ui.draggable.parent().isotope('remove', ui.draggable);                                              
+                
+                // Set filter variables
+                //setFilterVariables();
+                
+                // Call action function to update Opportunity record
+                updateOpportunityStage($opp.attr('id'), $this.attr('data-value'));   
+            }
+        });
+    }                 
+    </script>
+
+    
+    <apex:form id="mainForm">
+        <apex:actionRegion >
+            
+            <apex:actionFunction immediate="false"
+                                 action="{!updateOpportunityStage}" name="updateOpportunityStage"
+                                 reRender="errorPanel, mainPanel, stageBucketsDropPanel"
+                                 status="loading">
+                <apex:param name="param1" assignTo="{!selectedOppId}" value="" />
+                <apex:param name="param2" assignTo="{!oppStageName}" value="" />
+            </apex:actionFunction>
+            
+            <apex:actionFunction name="displayOppRecord"
+                                 action="{!displayOpportunityRecord}" immediate="true"
+                                 reRender="oppRecordTab, errorPanel" status="loading"
+                                 oncomplete="$('#tabbedPanel').parent().removeClass('hidePanel'); ">
+                <apex:param name="firstParam" assignTo="{!selectedOppId}" value="" />
+            </apex:actionFunction>
+            
+            
+            
+            
+            
+            <apex:actionFunction name="refreshOpportunityList"
+                                 action="{!refreshOpportunityList}"
+                                 reRender="errorPanel, mainPanel, selectedAccountManagerName, stageBucketsDropPanel"
+                                 status="loading"
+                                 oncomplete="$('#lessInfo').addClass('is-checked');$('#moreInfo').removeClass('is-checked');">
+                <apex:param name="param1" assignTo="{!filterCriteriaChanged}"
+                            value="" />
+                <apex:param name="param2" assignTo="{!viewingAsAll}" value="" />
+            </apex:actionFunction>
+            
+            <apex:actionFunction name="saveOpportunityFields"
+                                 action="{!saveOpportunityFields}"
+                                 reRender="errorPanel, updatedOpportunityPanel, mainPanel, stageBucketsDropPanel"
+                                 status="loading">
+                <apex:param name="param1" assignTo="{!selectedOppId}" value="" />
+                <apex:param name="param2"
+                            assignTo="{!genericOpportunity.LeadSource}" value="" />
+                <apex:param name="param3" assignTo="{!genericOpportunity.StageName}"
+                            value="" />
+                
+            </apex:actionFunction>
+            
+            
+        </apex:actionRegion>
+        
+        <apex:actionFunction name="nextPage" action="{!nextPage}"
+                             reRender="errorPanel, mainPanel" status="loading"
+                             oncomplete="$('html, body').animate({scrollTop: $('#opportunitytListPanel')}, 0);" />
+        
+        <apex:actionFunction name="previousPage" action="{!previousPage}"
+                             reRender="errorPanel, mainPanel" status="loading"
+                             oncomplete="$('html, body').animate({scrollTop: $('#opportunitytListPanel')}, 0);" />
+        
+        <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <apex:outputPanel layout="block" styleClass="loadingStyle">
+                    <apex:outputPanel layout="block" style="margin-top: 5px;">
+                        <img height="16" width="16" src="/img/loading.gif" />
+                        <apex:outputLabel style="font-size: 15px;color:white; font-weight:bold;">
+                            Loading...
+                        </apex:outputLabel>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </apex:facet>
+            <apex:facet name="stop" />
+        </apex:actionstatus>
+        
+        
+        
+        <div id="oppStageBucketPanel" style="display: none;">
+            <select id="oppStageBucketOptions">
+                <apex:repeat var="bucketName" value="{!sortedStageBuckets}">
+                    <apex:outputPanel layout="none" rendered="{!bucketName <> 'All'}">
+                        <option value="{!bucketName}">{!bucketName}</option>
+                    </apex:outputPanel>
+                </apex:repeat>
+            </select>
+        </div>
+        
+        
+
+        
+        
+        <!-- This panel is used to refresh the tiles after the Opportunity tab fields are updated -->
+        <apex:outputPanel style="display:none;" id="updatedOpportunityPanel">
+            
+            <apex:outputPanel rendered="{!NOT(ISBLANK(updatedOpportunityTile.opp.Id))}">
+                
+                <script>                  
+                // Clear error msg panel      
+                $('#opportunityErrorMsgPanel_{!updatedOpportunityTile.opp.Id}').text(''); 
+                
+                if({!isSaving}){
+                    // Refresh the current Tab label
+                    $currentTabLabel = $('#tab_{!updatedOpportunityTile.opp.Id}_Label');                   
+                    $currentTabLabel.removeClass("tier1 tier2 tier3 tier9").addClass("{!SUBSTITUTE(updatedOpportunityTile.opp.StageName, ' ', '')}");                 
+                    
+                    //Refresh current Tab Content
+                    $currentTabContent = $('#tab_{!updatedOpportunityTile.opp.Id}_Content');
+                    
+                    // Refresh the Chatter Section and Auto-height
+                    var oppChatterPanel = $('#chatterComponentPanel_{!updatedOpportunityTile.opp.Id}');                        
+                    oppChatterPanel.attr('src', oppChatterPanel.attr('src'));
+                    oppChatterPanel.iframeAutoHeight({minHeight: 400, debug: false});                        
+                }
+                </script>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!NOT(ISBLANK(updatedOpportunityErrorMsg))}">
+                <script>                                  
+                $('#opportunityErrorMsgPanel_{!selectedOppId}').text('{!JSENCODE(updatedOpportunityErrorMsg)}');                                                
+                </script>
+            </apex:outputPanel>
+            
+        </apex:outputPanel>
+        
+    </apex:form>
+    
+    <!-- jed header for filter -->
+    <table style="width: 100%; vertical-align: top;">
+        <tr>
+            <td id="opportunitytListPanel"
+                style="width: 100%; vertical-align: top;">
+                <apex:outputPanel id="mainPanel">
+                    
+                    <div id="container">
+                        <apex:repeat value="{!opportunityTiles}" var="oppWrapper">
+                            
+                            <!-- jed -->
+                            <div id="{!oppWrapper.opportunityId}"                               
+                                 class="item {!SUBSTITUTE(oppWrapper.opp.StageName, ' ', '')}">
+                                
+                                <table style="width: 230px; margin: 12px 10px 10px;"
+                                       cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td>
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td style="width: 70%; vertical-align: top;">
+                                                        
+                                                        <apex:outputText style="font-weight:bold;"                                                                    
+                                                                         value="Stage: " />
+                                                        <apex:outputText style="font-weight:bold;"                                                                    
+                                                                         value="{!oppWrapper.opp.StageName}" />                 
+                                                    </td>
+                                                    <td
+                                                        style="text-align: right; width: 30%; vertical-align: top;">
+                                                        <apex:outputText value="{!IF(oppWrapper.opp.StageName == 'Stage A', 'Stage AA', oppWrapper.opp.StageName)}"
+                                                                         style="font-size: 10px;"/>
+                                                                         <!--styleClass="moreInfoToggleField stageName" /> --> 
+                                                                         
+                                                        
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+                                
+                                <div class="tileBottomRow">
+                                    <apex:outputText styleClass="totalPlanAssets moreInfoToggleField"
+                                                     value="{0, number, $###,###,###}">
+                                        <apex:param value="" />
+                                    </apex:outputText>
+                                    &nbsp;
+                                    
+                                    <apex:outputText styleClass="lastActivityDate">
+                                        <apex:param value="{!oppWrapper.opp.stagename}" />
+                                    </apex:outputText>
+                                </div>
+                                
+                            </div>
+                        </apex:repeat>
+                    </div>
+                    
+                    <script type="text/javascript">                                                                                  
+                    $(function() {                                  
+                        
+                        // init Isotope
+                        var $container = $('#container').isotope({
+                            itemSelector: '.item',
+                            layoutMode: 'masonry',
+                            masonry: {
+                                columnWidth: 250,
+                                gutter: 10
+                            }
+                        });                                                                                                   
+                        
+                        if(!isUsingTablet){
+                            // expand Opportunity Record Detail View
+                            $container.on('dblclick', '.item', function() {
+                                showTabbedPanelFromTile(this);
+                            });
+                        }else{ 
+                            $('.companyName').css('text-decoration', 'underline').css('cursor', 'pointer');
+                            $container.on('click', '.companyName', function() {
+                                showTabbedPanelFromTile($(this).closest('.item')[0]);
+                            });                
+                        }
+                        
+                        $(".item").each(function (i, opp) {
+                            makeOppDraggable(opp);
+                        });
+                        
+                    });     
+                    </script>
+                    
+                    
+                    <div id="pagination" style="text-align: center; margin-top: 20px;">
+                        <apex:outputPanel rendered="{!currentPage > 0}" layout="none">
+                            <span title="Previous Page" onclick="previousPage();"
+                                  class="oppDetailHeaderLink">&lt;Previous</span>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!currentPage == 0}" layout="none">
+                            <span title="Previous Page" class="oppDetailHeaderLink"
+                                  style="color: gray; text-decoration: none; cursor: default;">&lt;Previous</span>
+                        </apex:outputPanel>
+                        
+                        <apex:outputText value="{!currentPage + 1} of {!totalPages + 1}"
+                                         style="margin-left:30px; color:gray; font-weight: bold;" />
+                        
+                        <apex:outputPanel rendered="{!currentPage < totalPages}"
+                                          layout="none">
+                            <span title="Next Page" onclick="nextPage();"
+                                  class="oppDetailHeaderLink">Next&gt;</span>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!currentPage == totalPages}"
+                                          layout="none">
+                            <span title="Next Page" class="oppDetailHeaderLink"
+                                  style="color: gray; text-decoration: none; cursor: default;">Next&gt;</span>
+                        </apex:outputPanel>
+                    </div>
+                    
+                    <div id="currentOpportunityIdsStrPanel" style="display: none;">
+                        {!currentOpportunityIdsStr}</div>
+                    
+                </apex:outputPanel>
+            </td>
+            
+           <!-- <table id="snapPanelContainer"> -->
+                <td id="tierDropboxPanel" style="vertical-align: top; width: 250px;">
+                    <apex:outputPanel id="stageBucketsDropPanel">
+                        <table id="tiersContainer" style="width: 250px;">
+                            <tr>
+                                <!-- jed -->
+                                <td class="snapPanel" id="StageA_SnapPanel"
+                                    data-value="Stage A">Stage A <apex:outputPanel styleClass="snapPanelTotals">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 40% !important;">
+                                                <apex:outputLabel value="Count: " />
+                                                <apex:outputText value="{!opportunityCountByStageBucket['Stage A']}" />
+                                            </td>
+                                            <td style="width: 60% !important;">
+                                                <apex:outputLabel value="Mandate Size Mil: " />
+                                                <apex:outputText value="$ {0, number, ###,###,###,##0.0}">
+                                                    <apex:param value="{!mandateSizeTotalByStageBucket['Stage A']}" />
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    </apex:outputPanel>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="snapPanel" id="StageB_SnapPanel"
+                                    data-value="Stage B">Stage B<apex:outputPanel styleClass="snapPanelTotals">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 40% !important;">
+                                                <apex:outputLabel value="Count: " />
+                                                <apex:outputText value="{!opportunityCountByStageBucket['Stage B']}" />
+                                            </td>
+                                            <td style="width: 60% !important;">
+                                                <apex:outputLabel value="Mandate Size Mil: " />
+                                                <apex:outputText value="$ {0, number, ###,###,###,##0.0}">
+                                                    <apex:param value="{!mandateSizeTotalByStageBucket['Stage B']}" />
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    </apex:outputPanel>
+                                </td>
+                            </tr>
+                            
+                            <!-- CONTAINER FOR  BUCKET DETAILS -->
+                            <tr>
+                                <td class="snapPanel" id="StageC_SnapPanel"
+                                    data-value="Stage C">Stage C<apex:outputPanel styleClass="snapPanelTotals">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 40% !important;">
+                                                <apex:outputLabel value="Count: " />
+                                                <apex:outputText value="{!opportunityCountByStageBucket['Stage C']}" />
+                                            </td>
+                                            <td style="width: 60% !important;">
+                                                <apex:outputLabel value="Mandate Size Mil: " />
+                                                <apex:outputText value="$ {0, number, ###,###,###,##0.0}">
+                                                    <apex:param value="{!mandateSizeTotalByStageBucket['Stage C']}" />
+                                                </apex:outputText>
+                                            </td>
+                                            
+                                        </tr>
+                                    </table>
+                                    </apex:outputPanel>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <script>   
+                        
+                        function calculateScrollingDivMargin(){
+                		    var res = $(window).scrollTop(); 
+                		    if(isUsingTablet){
+                		        res -= 40;
+                		    }
+                		
+                		    if(res < 0){
+                		        res = 0;
+                		    }
+                		
+                		    return res;
+                		}
+                        
+                        
+                        $(".snapPanel").each(function (i, panel) {
+                            makeSnapPanelDroppable(panel);
+                        });      
+                        
+                        var $scrollingDiv = $("#tierDropboxPanel");
+                        $(window).scroll(function(){            
+                            $scrollingDiv
+                            .stop()
+                            .animate({"marginTop": (calculateScrollingDivMargin()) + "px"}, "slow" );           
+                        });
+                        
+                        if(isUsingTablet){
+                            applyCSSTabletUpdatesOnStageBucketsPanel();
+                        }               
+                        </script>
+                        
+                    </apex:outputPanel>
+                </td> 
+            <!--</table>-->
+
+        </tr>
+    </table>
+</apex:page>

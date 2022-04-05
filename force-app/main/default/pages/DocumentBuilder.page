@@ -1,0 +1,280 @@
+<apex:page id="db_page" docType="html-5.0" controller="DocumentBuilder" contentType="{!renderedContentType}" renderAs="{!renderingService}">
+
+    <apex:outputPanel rendered="{!step != '5'}">
+        <style>
+            .docs{width:50%;} 
+            td .pbTitle {width: 40% !important;}
+            iframe{border:none;}
+        </style>
+    </apex:outputPanel>
+    
+    <apex:form id="db_form">
+        <apex:sectionHeader id="db_sh" title="Document Builder" subtitle="{!objectLabel+' ('+sensitivityValue+')'}" rendered="{!step != '5'}"/>
+        <apex:sectionHeader id="db_stpe5_sh" title="{!objectLabel+' ('+sensitivityValue+')'}" rendered="{!step == '5'}"/>
+        
+        <apex:pageBlock id="db_step1" rendered="{!step == '1'}">
+            <apex:actionStatus id="db_step1_status" startText="Please wait.."/>
+            
+            <apex:pageBlock title="Selected Child Records" mode="maindetail" rendered="{!selectedRecords != null}">
+                <apex:repeat value="{!selectedRecords}" var="sr">  
+                    <apex:commandButton value="{!sr.name} [{!sr.count}]" action="{!getRecords}" reRender="db_form" status="db_step1_status">
+                        <apex:param name="obejctName" value="{!sr.name}" assignTo="{!selectedChildObject}"/>
+                    </apex:commandButton>
+                </apex:repeat>
+            </apex:pageBlock>
+            
+            <apex:pageBlock id="db_step1_pb" title="Available Child Records" mode="maindetail">
+                <apex:pageBlockSection columns="3">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Child Relationships"/>
+                        <apex:selectList value="{!selectedChildObject}" multiselect="false" size="1">
+                            <apex:selectOptions value="{!childObjectOptions}"/>
+                            <apex:actionSupport event="onchange" action="{!getRecords}" reRender="db_form" status="db_step1_status"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Last Modified Date"/>
+                        <apex:panelGrid columns="4">
+                            <apex:outputLabel value="From"/>
+                            <apex:input type="date" value="{!lastModifiedDateFrom}">
+                                <apex:actionSupport event="onchange" action="{!getRecords}" reRender="db_form" status="db_step1_status"/>
+                            </apex:input>
+                            <apex:outputLabel value="To"/>
+                            <apex:input type="date" value="{!lastModifiedDateTo}">
+                                <apex:actionSupport event="onchange" action="{!getRecords}" reRender="db_form" status="db_step1_status"/>
+                            </apex:input>
+                        </apex:panelGrid>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                
+                <br/>         
+                <apex:pageBlockTable id="db_step1_table" value="{!records}" var="rec">
+                    <apex:column width="40px">
+                        <apex:facet name="header"> 
+                            <apex:inputCheckbox id="db_step1_selectall" onclick="selectAll(this.checked, 'db_step1')"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!rec.selected}" onchange="selectChange(this.checked, 'db_step1')"/>
+                    </apex:column>
+                    
+                    <apex:repeat value="{!columns}" var="col">
+                        <apex:column headerValue="{!col.label}" value="{!rec.values[col.name]}" width="100"/>
+                    </apex:repeat>
+                </apex:pageBlockTable>
+            
+                <apex:pageBlockButtons rendered="{!records != null}" location="top">
+                    <apex:commandButton action="{!addRecords}" value="Select Records" reRender="db_step1" status="db_step1_status"/>
+                    <apex:commandButton action="{!addAllRecords}" value="Select All Records" reRender="db_step1" status="db_step1_status"/>
+                </apex:pageBlockButtons>
+            </apex:pageBlock>
+                
+            <apex:pageBlockButtons > 
+                <apex:commandButton value="Next" action="{!step2}" rerender="db_form" status="db_step1_status"/>
+            </apex:pageBlockButtons>
+            
+             <script>
+                if(typeof(selectChange) !== "undefined"){
+                    selectChange(true, 'db_step1');
+                }
+             </script>
+        </apex:pageBlock>  
+        
+        <apex:pageBlock id="db_step2" rendered="{!step == '2'}">
+            <apex:actionStatus id="db_step2_status" startText="Please wait.."/>
+            
+            <apex:pageBlock title="Selected Child Documents" mode="maindetail" rendered="{!selectedDocuments != null}">
+                <apex:repeat value="{!selectedDocuments}" var="sr">  
+                    <apex:commandButton value="{!sr.name} - {!sr.dname} [{!sr.count}]" action="{!getDocuments}" reRender="db_form" status="db_step2_status">
+                        <apex:param name="obejctName" value="{!sr.name}" assignTo="{!selectedChildObject}"/>
+                        <apex:param name="documentName" value="{!sr.dname}" assignTo="{!selectedDocumentType}"/>
+                    </apex:commandButton>
+                </apex:repeat>
+            </apex:pageBlock>
+            
+            <apex:pageBlock id="db_step2_pb" title="Available Child Documents" mode="maindetail">
+                <apex:pageBlockSection columns="2">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Child Relationships"/>
+                        <apex:selectList value="{!selectedChildObject}" multiselect="false" size="1">
+                            <apex:selectOptions value="{!childObjectOptions}"/>
+                            <apex:actionSupport event="onchange" action="{!getDocuments}" reRender="db_form" status="db_step2_status"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Document Type"/>
+                        <apex:selectList value="{!selectedDocumentType}" multiselect="false" size="1">
+                            <apex:selectOptions value="{!documentTypeOptions}"/>
+                            <apex:actionSupport event="onchange" action="{!getDocuments}" reRender="db_form" status="db_step2_status"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                
+                <br/>         
+                <apex:pageBlockTable id="db_step2_table" value="{!documents}" var="rec">
+                    <apex:column width="40px">
+                        <apex:facet name="header"> 
+                            <apex:inputCheckbox id="db_step2_selectall" onclick="selectAll(this.checked, 'db_step2')"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!rec.selected}" onchange="selectChange(this.checked, 'db_step2')"/>
+                    </apex:column>
+                    
+                    <apex:repeat value="{!columns}" var="col">
+                        <apex:column headerValue="{!col.label}" value="{!rec.values[col.name]}" width="100"/>
+                    </apex:repeat>
+                </apex:pageBlockTable>
+            
+                <apex:pageBlockButtons location="top" rendered="{!documents != null}">
+                    <apex:commandButton action="{!addDocuments}" value="Select Documents" reRender="db_step2" status="db_step2_status"/>
+                </apex:pageBlockButtons>
+            </apex:pageBlock>
+                
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Previous" action="{!step1}" rerender="db_form" status="db_step2_status"/>
+                <apex:commandButton value="Next" action="{!step3}" rerender="db_form" status="db_step2_status"/>
+            </apex:pageBlockButtons>
+            
+             <script>
+                if(typeof(selectChange) !== "undefined"){
+                    selectChange(true, 'db_step2');
+                }
+             </script>
+        </apex:pageBlock>
+        
+        <apex:pageBlock id="db_step3" rendered="{!step == '3'}">
+            <apex:actionStatus id="db_step3_status" startText="Please wait.."/>
+            
+            <apex:pageBlock mode="maindetail" title="Options">
+                <apex:pageBlockSection columns="2">
+                    <apex:inputCheckbox ><b>Save document as attachment to record: </b></apex:inputCheckbox>
+                    <apex:inputCheckbox ><b>Bundle Document into a single file: </b></apex:inputCheckbox>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+               
+            <apex:pageBlock id="db_step3_pb" title="Available Templates" mode="maindetail">
+                <apex:pageBlockTable id="db_step3_table" value="{!templates}" var="temp">
+                    <apex:column width="30px">
+                        <apex:facet name="header"> 
+                            <apex:inputCheckbox id="db_step3_selectall" onclick="selectAll(this.checked, 'db_step3')"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!temp.selected}" onchange="selectChange(this.checked, 'db_step3')"/>
+                    </apex:column>
+                    <apex:column headerValue="Name" value="{!temp.name}" width="100"/>
+                    <apex:column headerValue="Child Relationships" width="500">
+                        <apex:panelGrid columns="1">
+                            <apex:repeat value="{!temp.childObjects}" var="co">
+                                <div style="padding:5px">
+                                    <h4>{!co.name}: &nbsp;</h4> {!co.recordsCount} Records, {!co.documentsCount} Documents
+                                </div>
+                            </apex:repeat>
+                        </apex:panelGrid>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Previous" action="{!step2}" rerender="db_form" status="db_step3_status"/>
+                <apex:commandButton value="Generate Document" action="{!step4}" status="db_step3_status"/>
+            </apex:pageBlockButtons>
+            
+            <script>
+                if(typeof(selectChange) !== "undefined"){
+                    selectChange(true, 'db_step3');
+                }
+             </script>
+        </apex:pageBlock>
+        
+        <apex:pageBlock id="db_step4" rendered="{!step == '4'}" title="Conga Composer">
+            <apex:outputLabel value="{!congaFrameURL}"/> <br/><br/>
+            <iframe src="{!congaFrameURL}" height="600" width="900"></iframe>
+        </apex:pageBlock>
+        
+        <apex:pageBlock id="db_step5" rendered="{!step == '5'}">
+            <apex:detail relatedList="false" showChatter="false" subject="{!recordId}"/>
+            
+            <apex:repeat value="{!selectedRecords}" var="sr">
+                <apex:pageBlockSection title="{!sr.name}">
+                    <apex:pageBlockTable value="{!sr.records}" var="rec">
+                        <apex:repeat value="{!sr.childObject.fields}" var="col">
+                            <apex:column headerValue="{!col.label}" value="{!rec.values[col.name]}" width="100"/>
+                        </apex:repeat>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:repeat>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script>
+        var pb = 'db_page:db_form:';
+        
+        function getTableId(key){
+            return (pb+key+':'+key+'_pb:'+key+'_table');
+        }    
+    
+        function getTable(key){
+            return document.getElementById(getTableId(key));
+        }
+    
+        function getCheckboxList(tkey, skipId){
+            var list = [];
+            var table = getTable(tkey);
+            if(table){
+                for(var i = 0; i < table.rows.length; i++){
+                    var item = table.rows[i].cells[0].getElementsByTagName('input')[0];
+                    if(item && item.id != skipId){
+                        list.push(item);
+                    }
+                }
+             }
+            return list;
+        }
+    
+        function enableSecondCheckbox(tkey, skipId){
+            var table = getTable(tkey);
+            if(table){
+                for(var i = 0; i < table.rows.length; i++){
+                    var first = table.rows[i].cells[0].getElementsByTagName('input')[0];
+                    var second = table.rows[i].cells[1].getElementsByTagName('input')[0];
+                    if(first && second && first.id != skipId){
+                        if(first.checked){
+                            second.disabled = false;
+                        } else {
+                            second.disabled = true;
+                            second.checked = false;
+                        }
+                    }
+                }
+             }
+        }
+    
+        function selectAll(checked, tkey){
+            var list = getCheckboxList(tkey);
+            for(var i = 0; i < list.length; i++){
+                list[i].checked = checked;
+            }
+            enableSecondCheckbox(tkey);
+        }
+    
+        function selectChange(checked, tkey){
+            var skipId = getTableId(tkey)+':'+tkey+'_selectall';
+            var selectall = document.getElementById(skipId);
+            
+            //enableSecondCheckbox(tkey, skipId);
+            
+            if(selectall){
+                selectall.checked = false;
+                if(checked){
+                    var list = getCheckboxList(tkey, skipId);
+                    if(list.length){
+                        for(var i = 0; i < list.length; i++){
+                            if(!list[i].checked){
+                                return;
+                            }
+                        }
+                        selectall.checked = true;
+                    }
+                }
+            }
+        }
+    </script> 
+</apex:page>

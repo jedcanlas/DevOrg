@@ -1,0 +1,33 @@
+<apex:page Controller="CustomSpreadsheetController">
+
+<apex:form >
+<apex:pageBlock title="Multi Line Edit">
+
+ <apex:commandButton value="Submit" action="{!save}" />
+ <apex:commandButton value="Add" action="{!add}" rerender="in" status="inStatus"/>
+ <apex:commandButton value="Reset" action="{!reset}" rerender="in,outStatus" status="outStatus" />
+
+<apex:outputPanel id="in" ><apex:actionStatus startText="Updating...." id="outStatus">
+   <apex:facet name="stop">
+ <apex:dataTable value="{!accounts}" var="a" styleClass="list"  >
+  <apex:column ><apex:inputField value="{!a.name}" /></apex:column>
+  <apex:column ><apex:inputField value="{!a.parentid}" required="false"/></apex:column>
+  <apex:column ><apex:inputField value="{!a.type}" required="false"/></apex:column>›
+  <apex:column ><apex:inputField value="{!a.billingcity}" required="false"/></apex:column>
+ </apex:dataTable> 
+ </apex:facet></apex:actionStatus>
+ 
+</apex:outputPanel>
+</apex:pageBlock>
+</apex:form>
+<!--
+ <apex:outputPanel id="out">
+  <apex:actionStatus startText="Updating...." id="outStatus">
+   <apex:facet name="stop">
+   <apex:dataTable value="{!accounts}" var="a">
+   <apex:column><apex:outputText value="{!a.name} , {!a.billingcity}"/></apex:column>
+  </apex:dataTable>
+</apex:outputPanel>
+
+-->
+</apex:page>

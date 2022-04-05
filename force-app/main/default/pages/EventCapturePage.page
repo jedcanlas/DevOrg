@@ -1,0 +1,26 @@
+<apex:page >
+<script>
+
+    var parent = document.getElementsByTagName("HTML")[0].Id;
+console.log('@@@@@@@@@			' + parent);
+
+parent.addEventListener('click',function(event){
+
+    event.preventDefault();
+    var targetText;
+    if(event.target === parent) {
+        targetText='parent';
+    }
+
+    console.log('Click Detected in parent on ' + targetText);
+},true);
+                      
+child.addEventListener('click',function(event){
+    console.log('Click Detected in child (bubbling phase)');
+});
+
+child.addEventListener('click',function(event){
+    console.log('Click Detected in child (capture phase)');
+},true);
+    </script>
+</apex:page>

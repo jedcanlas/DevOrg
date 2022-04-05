@@ -1,0 +1,2364 @@
+<apex:page controller="DnDController" sidebar="false">
+    
+    <script type="text/javascript"
+    src="{!URLFOR($Resource.JQueryLibs, 'jquery.min.js')}"/>
+        <script type="text/javascript"
+        src="{!URLFOR($Resource.masonry, 'js/isotope.pkgd.min.js')}"/>
+            <script type="text/javascript"
+            src="{!URLFOR($Resource.JQueryLibs, 'jquery-ui.js')}"/>
+                <script type="text/javascript"
+                src="{!URLFOR($Resource.HighChartsJS, 'highcharts.js')}"/>
+                    <script type="text/javascript"
+                    src="{!URLFOR($Resource.HighChartsJS, 'highcharts-more.js')}"/>
+                        <script type="text/javascript"
+                        src="{!URLFOR($Resource.masonry, 'js/jquery.timeago.js')}"/>
+                            <script type="text/javascript"
+                            src="{!URLFOR($Resource.masonry, 'js/jquery.iframe-auto-height.plugin.1.9.5.min.js')}"/>
+                                <link rel="stylesheet"
+                                href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+                                    <script type="text/javascript"
+                                    src="{!URLFOR($Resource.masonry, 'js/jquery.browser.js')}"/>
+                                        <link rel="stylesheet"
+                                        href="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/css/flat-ui.css')}" />
+                                            <script
+                                        src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/jquery-ui-1.10.3.custom.min.js')}">
+                                            </script>
+    <script
+    src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/jquery.ui.touch-punch.min.js')}">
+        </script>
+    <link rel="stylesheet" href="{!URLFOR($Resource.FontAwesome, 'font-awesome-4.4.0/css/font-awesome.min.css')}" />
+    
+    <script src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/bootstrap.min.js')}"/>
+    
+    <script src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/bootstrap-multiselect.js')}"/>
+        <link rel="stylesheet" href="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/bootstrap/css/bootstrap-multiselect.css')}" />    
+            
+            <script
+        src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/bootstrap-select.js')}">
+            </script>
+    <script
+    src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/bootstrap-switch.js')}">
+        </script>
+    <link rel="stylesheet" href="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/bootstrap/css/bootstrap-switch.css')}" />  
+    <script
+    src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/flatui-checkbox.js')}">
+        </script>
+    <script
+    src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/flatui-radio.js')}">
+        </script>
+    <script
+    src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/jquery.tagsinput.js')}">
+        </script>
+    <script
+    src="{!URLFOR($Resource.FlatUI, 'Flat-UI-master/js/jquery.placeholder.js')}">
+        </script>
+    <script type="text/javascript"
+    src="{!URLFOR($Resource.kendo, 'kendo.all.min.js')}"/>
+        <link rel="stylesheet"
+        href="{!URLFOR($Resource.kendo, 'kendo.common.min.css')}" />
+            <link rel="stylesheet" href="https://da7xgjtj801h2.cloudfront.net/2015.1.429/styles/kendo.common-material.min.css" />
+                <link rel="stylesheet" href="https://da7xgjtj801h2.cloudfront.net/2015.1.429/styles/kendo.material.min.css" />
+                    <link rel="stylesheet" href="https://da7xgjtj801h2.cloudfront.net/2015.1.429/styles/kendo.dataviz.min.css" />
+                        <link rel="stylesheet" href="https://da7xgjtj801h2.cloudfront.net/2015.1.429/styles/kendo.dataviz.material.min.css" />
+                            
+                            <script type="text/javascript"
+                            src="{!URLFOR($Resource.kendo, 'dropdown-multiselect.js')}"/>
+                                
+                                <style>
+                                * {
+                                webkit-box-sizing: initial;
+                                -moz-box-sizing: initial;
+                                box-sizing: initial;
+                            }
+                            
+                            body {
+                                font-size: 12px;
+                                line-height: normal;
+                            }
+    table {
+        border-collapse: separate;
+        border-spacing: 2px;
+    }
+    
+    label {
+        font-weight: initial;
+        display:;
+    }
+    
+    /* ---- button ---- */
+    
+    /* ---- button_group ---- */
+    .button_group {
+        background-color: transparent;
+        display: inline-block;
+        padding: 0 5px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    .button_floating {
+        text-align: center;
+        vertical-align: middle;
+        display: inline-block;
+        padding-right: 10px;
+    }
+    
+    .button_floating div {
+        display: inline-block;
+        color: #34495e;
+        vertical-align: middle;
+    }
+    
+    .button_group:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+    
+    .btn-block {
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-lg:hover {
+        text-decoration: none;
+        cursor: default;
+    }
+        
+        .btn-lg {
+        border-radius: 0;
+        font-size: 14px;
+        padding: 7px 16px;
+    }
+    
+    select .btn-default {
+        border-radius: 0;
+        font-size: 14px;
+        padding: 2px;
+    }
+    
+    .form-control {
+        border-radius: 0px;
+    }
+    
+    .form-group {
+        margin-bottom: 0px !important;
+        border-radius: 0px;
+    }
+    
+    .form-group.focus .form-control, .form-control:focus {
+        border-color: #34495e;
+    }
+    
+    #clearKeywordFilters:hover, #searchIcon:hover {
+    color: #34495e;
+    cursor: default;
+    }
+    
+    #searchIcon {
+    color: #b2bcc5;
+    font-size: 20px;
+    left: 5px;
+    padding-left: 2px;
+    position: absolute;
+    top: 10px;
+    }
+    
+    .tooltipItem {
+        display: none;
+        z-index: 1000;
+        position: absolute;
+        width: 380px;
+        text-align: left;
+        margint-left: 40px;
+        background-color: white;
+        border: 2px solid #42a2d0;
+        border-radius: 0;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+    
+    label.radio {
+        display: inline-block;
+    }
+    
+    .radio.checked {
+        color: #34495e;
+    }
+    
+    .checkbox, .radio {
+        margin-bottom: 0px;
+    }
+    
+    .checkbox .icons, .radio .icons {
+        line-height: 12px;
+    }
+    
+    .checkbox.checked .second-icon, .radio.checked .second-icon {
+        color: #34495e;
+    }
+    
+    .form-control+.input-icon {
+        right: 4px;
+        padding: 0 4px 0 0;
+    }
+    
+    .filterImg {
+        width: 30px;
+        height: 20px;
+        background-repeat: no-repeat;
+        background-size: 30px;
+        padding: 6px;
+        background-position: center center;
+    }
+    
+    #moreInfo {
+    background-image:
+    URL("{!URLFOR($Resource.masonry, 'images/more_info_new.svg')}");
+    }
+    
+    #lessInfo {
+    background-image:
+    URL("{!URLFOR($Resource.masonry, 'images/less_info_new.svg')}");
+    }
+    
+    #moreInfo.is-checked {
+    border: 2px solid #34495e;
+    }
+    
+    #lessInfo.is-checked {
+    border: 2px solid #34495e;
+    }
+    
+    #newOpportunity {
+    /*background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/New_Opportunity.svg')}");*/
+    margin-top: -15px;
+    }
+    
+    #selectAccountManager {
+    /*background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/select_account_manager.svg')}");*/
+    margin-bottom: 1px;
+    background-size: 34px auto;
+    }
+    
+    #opportunityReport1 {
+    /*background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/excel_icon.svg')}");*/
+    background-size: 36px auto;
+    margin-right: 10px;
+    margin-top: 2px;
+    }
+    /* ---- tiles ---- */
+    .item {
+        width: 250px;
+        height: 105px;
+        float: left;
+        margin-bottom: 10px;
+        background: #E6ECF4;
+        margin: 5px;
+        border-radius: 0px;
+    }
+    
+    .item.Lead, .tabLabel.Lead, .tabBottom.Lead {
+        background: #42A2D0;
+    }
+    
+    .item.Lead{
+        border: 1px solid rgb(132, 193, 224);
+        width: 248px;
+        height: 103px;
+    }
+    
+    .item.moreInfo.Lead{
+        width: 248px;
+        height: 203px;
+    }
+    
+    .item.Lead span {
+        color: gray;
+    }
+    
+    <!-- jed bucket styles -->        
+        .item.StageA {
+            background: #84c1e0;
+        } 
+    
+    .item.StageB {
+        background: #42A2D0;
+    } 
+    
+    .item.StageC {
+        background: #236b8d;
+    }         
+    
+    #StageA_SnapPanel {
+    background-color: #84c1e0;
+    }
+    
+    #StageB_SnapPanel {
+    background-color: #42A2D0;
+    }
+    
+    #StageC_SnapPanel {
+    background-color: #236b8d;
+    }        
+    <!-- end -->
+        
+        
+        .item.Lead, .tabLabel.Lead, .tabBottom.Lead {
+            background: #D4D4D4;
+            color: gray;
+        }
+    
+    .item.Prospect, .tabLabel.Prospect, .tabBottom.Prospect {
+        background: #84c1e0;
+    }
+    
+    .item.RFP, .tabLabel.RFP, .tabBottom.RFP {
+        background: #42A2D0;
+    }
+    
+    .item.Qualified_Opportunity, .tabLabel.Qualified_Opportunity, .tabBottom.Qualified_Opportunity {
+        background: #337DB5;
+    }
+    
+    .item.Short_List, .tabLabel.Short_List, .tabBottom.Short_List {
+        background: #236b8d;
+    }
+    
+    .item.Search, .tabLabel.Search, .tabBottom.Search {
+        background: #23577E;
+    }
+    
+    .item.Finals, .tabLabel.Finals, .tabBottom.Finals {
+        background: #122E43;
+    }
+    
+    .item.Won_Not_Funded, .item.Won, .item.Funded, .tabLabel.Won_Not_Funded,
+        .tabLabel.Won, .tabLabel.Funded, .tabBottom.Won_Not_Funded, .tabBottom.Won,
+            .tabBottom.Funded {
+                background: #432712;
+            }
+    
+    .item, .item td {
+        color: white;
+    }
+    
+    .item.hasActivityModifiedToday {
+        background: #A1A8AD;
+    }
+    
+    .item.moreInfo {
+        width: 250px;
+        height: 205px;
+    }
+    
+    .item.moreInfo .moreInfo {
+        display: block;
+    }
+    
+    .item.moreInfo .moreInfoPanel {
+        padding-top: 10px;
+        margin-top: 16px;
+        border-top: 1px solid;
+        width: 100%;
+    }
+    
+    .item .moreInfo {
+        display: none;
+    }
+    
+    .item.moreInfo .moreInfoPanel td:nth-child(1) {
+        height: 20px;
+        text-align: left;
+        vertical-align: middle;
+        width: 25px;
+    }
+    
+    .item.moreInfo .moreInfoPanel td:nth-child(2) {
+        height: 20px;
+        width: 88%;
+    }
+    
+    .item.moreInfo .moreInfoPanel img {
+        height: auto;
+        width: 20px;
+    }
+    
+    .item .tileFirstCol {
+        width: 20px;
+    }
+    
+    .item .tileFirstCol img {
+        height: auto;
+        width: 20px;
+    }
+    
+    .item .tileBottomRow {
+        position: absolute;
+        bottom: 0;
+        padding-bottom: 10px;
+        width: 100%;
+    }
+    
+    .item .tileBottomRow .lastActivityDate {
+        float: right;
+        padding-right: 15px;
+        padding-bottom: 2px;
+        font-size: 10px;
+    }
+    
+    .item .tileBottomRow .totalPlanAssets {
+        float: left;
+        padding-left: 13px;
+        font-size: 10px;
+    }
+    
+    #opportunitytListPanel {
+    background-color: #E6ECF4;
+    }
+    
+    #tiersContainer {
+    font-size: 25px;
+    font-variant: small-caps;
+    font-weight: bold;
+    height: 100%;
+    text-shadow: 2px 2px gray;
+    width: 100%;
+    }
+    
+    #tier1, .item.tier1 .tierBanner, .tabLabel.tier1 .tierBanner {
+    background-color: #55c46d;
+    //
+    Green
+    }
+    
+    #tier2, .item.tier2 .tierBanner, .tabLabel.tier2 .tierBanner {
+    background-color: #e6f279;
+    //
+    Yellow
+    }
+    
+    #tier3, .item.tier3 .tierBanner, .tabLabel.tier3 .tierBanner {
+    background-color: #e8650e;
+    //
+    Red
+    }
+    
+    #filters .tier1 {
+    color: #55c46d;
+    //
+    Green
+    }
+    
+    #filters .tier2 {
+    color: #e6f279;
+    //
+    Yellow
+    }
+    
+    #filters .tier3 {
+    color: #e8650e;
+    //
+    Red
+    }
+    
+    #tiersContainer td {
+    width: 100%;
+    height: 15px;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    }
+    
+    .snapPanelTotals {
+        font-variant: normal;
+        font-size: 11px;
+        text-shadow: none;
+    }
+    
+    .snapPanelTotals label {
+        font-size: 11px;
+    }
+    
+    .snapPanelTotals td {
+        height: 11px !important;
+    }
+    
+    #prospect_SnapPanel {
+    background-color: #84c1e0;
+    }
+    
+    #RFP_SnapPanel {
+    background-color: #42A2D0;
+    }
+    
+    #qualifiedOpp_SnapPanel {
+    background-color: #337DB5;
+    }
+    
+    #shortList_SnapPanel {
+    background-color: #23577E;
+    }
+    
+    #finals_SnapPanel {
+    background-color: #122E43;
+    }
+    
+    #won_SnapPanel {
+    background-color: #432712;
+    }
+    /*Ketan Benegal - Commented out.*/
+    /*#won_SnapPanel{
+            background-color: #133b4e;
+        }
+        */
+    #funded_SnapPanel {
+    background-color: #133b4e;
+    }
+    
+    #lost_SnapPanel {
+    background-color: #E6ECF4;
+    height: 49px !important;
+    }
+    
+    #closedLost {
+    background-color: #E6ECF4;
+    }
+    
+    .closedLost {
+        display: none !important;
+    }
+    
+    .drag-helper {
+        opacity: .65 !important;
+    }
+    
+    .snapPanelHover {
+        background-color: lightblue !important;
+        border: 2px dashed #42A2D0;
+    }
+    
+    .tierBanner {
+        width: 6px;
+        height: 105px;
+        position: absolute;
+        display: inline-block;
+    }
+    
+    .item.moreInfo .tierBanner {
+        height: 205px;
+    }
+    
+    .item.moreInfo.Lead .tierBanner {
+        height: 203px;
+    }
+    
+    .tier .tierBanner {
+        height: 105px;
+    }
+    
+    .tabLabel .tierBanner {
+        height: 100%;
+    }
+    
+    .truncateText {
+        max-width: 220px;
+        white-space: nowrap;
+        overflow-x: hidden;
+        display: inline-block;
+        text-overflow: ellipsis;
+    }
+    
+    .companyName.truncateText {
+        max-width: 170px !important;
+    }
+    
+    .truncateText2 {
+        max-width: 220px;
+        white-space: nowrap;
+        overflow-x: hidden;
+        display: inline-block;
+        text-overflow: ellipsis;
+    }
+    
+    .companyName.truncateText2 {
+        font-weight: bold;
+        color: #960018 !important;
+        max-width: 170px !important;
+    }
+    
+    .truncateText3 {
+        max-width: 220px;
+        white-space: nowrap;
+        overflow-x: hidden;
+        display: inline-block;
+        text-overflow: ellipsis;
+    }
+    
+    .companyName.truncateText3 {
+        max-width: 170px !important;
+        font-weight: bold;
+        color: GREEN !importan;t
+    }
+    
+    .contactEmail.truncateText {
+        max-width: 100px;
+        white-space: nowrap;
+        overflow-x: hidden;
+        //display: inline-block;
+        text-overflow: ellipsis;
+    }
+    </style>
+    
+    <style>
+        label {
+            font-size: 14px;
+        }
+    
+    #tabbedPanel {
+    padding: 0px;
+    }
+    
+    #tabbedPanel .ui-tabs-nav {
+    background: transparent;
+    border-width: 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    }
+    
+    #tabbedPanel .ui-tabs-panel {
+    margin: 0em 0.2em 0.2em 0.2em;
+    }
+    
+    #tabbedPanel .ui-tabs .ui-tabs-nav li {
+    margin-left: 0.05em;
+    margin-bottom: -1px;
+    }
+    
+    .tabLabel {
+        background: #42A2D0;
+        display: table;
+        height: 45px;
+    }
+    
+    .tabBottom {
+        background-color: #42A2D0;
+        padding-top: 20px;
+        border-left: 1px solid #aaaaaa;
+        border-right: 1px solid #aaaaaa;
+        border-bottom: 1px solid #aaaaaa;
+    }
+    
+    .oppRecordMainPanel {
+        background-color: #E6ECF4;
+        padding: 15px;
+    }
+    
+    .oppRecordMainPanel .oppName {
+        font-size: 16px;
+        color: #8B8E92;
+        text-decoration: underline;
+    }
+    
+    .oppRecordMainPanel .instClientStatus {
+        font-size: 14px;
+        font-style: italic;
+        color: #8B8E92;
+    }
+    
+    .oppRecordMainPanel .oppName:HOVER {
+        text-decoration: none;
+        color: #8B8E92;
+    }
+    
+    .oppRecordMainPanel .oppContactField {
+        font-size: 16px;
+        color: #A1A8AD;
+        vertical-align: middle;
+    }
+    
+    .oppDetailHeaderLink, .oppDetailHeaderLinka {
+        color: #42A2D0;
+        font-weight: bold;
+        padding-left: 15px;
+        font-size: 5x;
+    }
+    
+    .oppDetailHeaderLink:FIRST-CHILD {
+        padding-left: 0px;
+    }
+    
+    .oppDetailHeaderLink:HOVER {
+        cursor: pointer;
+    }
+    
+    .oppDetailHeaderLink a {
+        color: #42A2D0;
+    }
+    
+    .oppDetailHeaderLink a:HOVER {
+        text-decoration: none;
+        color: #42A2D0;
+    }
+    
+    .oppDetailHeaderLink.selected {
+        color: #34495e;
+    }
+    
+    .topics .k-button span a {
+        color: white;
+    }
+    
+    .k-icon.k-delete {
+        height: 18px;
+    }
+    
+    .oppTitleImg {
+        width: 40px;
+        height: 40px;
+        background-repeat: no-repeat;
+        background-size: 40px;
+        background-position: center center;
+        display: inline-block;
+    }
+    
+    .addEditNotes {
+        background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/add-edit-notes.svg')}");
+    }
+    
+    .addEditNotes:HOVER {
+        background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/add-edit-notes_hover.svg')}");
+    }
+    
+    .fullDetails {
+        background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/full-details.svg')}");
+    }
+    
+    .fullDetails:HOVER {
+        background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/full-details_hover.svg')}");
+    }
+    
+    .closeAllTabsImg {
+        width: 20px;
+        height: 20px;
+        background-repeat: no-repeat;
+        background-size: 20px;
+        background-position: center center;
+        display: inline-block;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        z-index: 1000;
+    }
+    
+    .closeAllTabs {
+        background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/close-btn.svg')}");
+    }
+    
+    .closeAllTabs:HOVER {
+        background-image:
+        URL("{!URLFOR($Resource.masonry, 'images/close-btn_hover.svg')}");
+    }
+    
+    .opportunityTabSection {
+        border: 2px solid #d1d1ee;
+        padding: 10px;
+    }
+    
+    .opportunityTabSection td {
+        vertical-align: top;
+    }
+    
+    .feedTitle {
+        border-bottom: 1px solid;
+        padding-bottom: 5px;
+        text-align: center;
+    }
+    
+    .google_feed .newsTitle {
+        color: #1a0dab;
+        font-size: 15px;
+    }
+    
+    .google_feed .newsTitle:VISITED {
+        color: #609;
+    }
+    
+    .google_feed .newsPublisher {
+        color: #006621;
+        font-size: 13px;
+        display: inline-block;
+    }
+    
+    .google_feed .news-hyphen {
+        color: #666;
+        padding: 0 4px;
+        font-size: small;
+    }
+    
+    .google_feed .newsTimestamp {
+        color: #666;
+        font-size: 13px;
+        display: inline-block;
+    }
+    
+    .contact_feed {
+        padding: 0;
+    }
+    
+    .contact_feed li {
+        display: block;
+        margin: 0;
+        padding: 10px;
+        border: 1px solid;
+        margin-top: 10px;
+    }
+    
+    .contact_feed .imgContainer {
+        text-align: center;
+        margin-top: 5px;
+    }
+    
+    .espn_feed .imgContainer .thumbnailImg {
+        width: 150px;
+    }
+    
+    .espn_feed .imgContainer .smallIcon {
+        width: 16px;
+        height: 16px;
+        float: right;
+        position: absolute;
+        margin-left: 3px;
+    }
+    
+    .espn_feed .imgContainer .playIcon {
+        margin-top: 5px;
+    }
+    
+    .espn_feed .imgContainer .readMoreIcon {
+        margin-top: 25px;
+    }
+    
+    .hidePanel {
+        display: none;
+    }
+    
+    .showPanel {
+        display: inline-block;
+    }
+    
+    .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited
+    {
+        color: white;
+        opacity: 0.65;
+    }
+    
+    .ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link,
+        .ui-state-hover a:visited, .ui-state-focus a, .ui-state-focus a:hover,
+            .ui-state-focus a:link, .ui-state-focus a:visited {
+                color: white;
+                opacity: 1;
+            }
+    
+    .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited
+    {
+        color: white;
+        opacity: 1;
+    }
+    
+    .ui-tabs .ui-tabs-panel {
+        padding: 0px;
+    }
+    
+    .ui-tabs .ui-tabs-nav li.ui-tabs-active {
+        padding-bottom: 0px;
+    }
+    
+    .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+        display: block;
+    }
+    
+    .ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+        border-bottom-right-radius: 0px;
+    }
+    
+    .ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+        border-bottom-left-radius: 0px;
+    }
+    
+    .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+        border-top-right-radius: 0px;
+    }
+    
+    .ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+        border-top-left-radius: 0px;
+    }
+    
+    .loadingStyle {
+        background-color: #000000;
+        opacity: 0.8;
+        border: 2px solid;
+        border-radius: 0px;
+        -moz-border-radius: 5px; /* Firefox 3.6 and earlier */
+        display: block;
+        height: 40px;
+        width: 150px;
+        position: fixed;
+        text-align: center;
+        vertical-align: middle;
+        left: 50%;
+        top: 50%;
+        padding: 5px;
+        z-index: 1000;
+        webkit-box-sizing: initial;
+        -moz-box-sizing: initial;
+        box-sizing: initial;
+    }
+    </style>
+    
+    <style>
+        .k-icon, .k-tool-icon, .k-grouping-dropclue, .k-drop-hint,
+            .k-column-menu .k-sprite, .k-grid-mobile .k-resize-handle-inner:before,
+                .k-grid-mobile .k-resize-handle-inner:after {
+                    background-image: url("{!URLFOR($Resource.kendo, 'sprite-white.png')}");
+                }
+    
+    .k-multiselect.k-header {
+        border: 2px solid #c5c5c5;
+        width: 335px;
+    }
+    
+    .k-widget.k-multiselect.k-header.editable{
+        width: 200px;
+    }
+    
+    .k-floatwrap:after, .k-slider-items:after, .k-grid-toolbar:after {
+        clear: both;
+        content: "";
+        display: block;
+        height: 0;
+        overflow: hidden;
+        visibility: hidden;
+    }
+    
+    .k-input, input.k-textbox, textarea.k-textbox, input.k-textbox:hover,
+        textarea.k-textbox:hover, .k-textbox>input, .k-multiselect-wrap {
+            background-color: #fff;
+            color: #2e2e2e;
+        }
+    
+    .k-multiselect-wrap {
+        background-color: #fff;
+        border-color: #c5c5c5;
+        border-radius: 4px;
+        border-style: solid;
+        border-width: 0;
+        min-height: 2.04em;
+        position: relative;
+    }
+    
+    .k-floatwrap, .k-slider-items, .k-grid-toolbar {
+        display: block;
+    }
+    
+    .k-reset {
+        border: 0 none;
+        font-size: 100%;
+        list-style: none outside none;
+        margin: 0;
+        outline: 0 none;
+        padding: 0;
+        text-decoration: none;
+    }
+    
+    .k-multiselect-wrap li {
+        float: left;
+        line-height: 27px;
+        margin: 1px 0 1px 2px;
+        padding: 0.1em 0.15em 0.1em 0.4em;
+        border-radius: 0px;
+    }
+    
+    .k-multiselect-wrap li span {
+        margin: 0.1em;
+    }
+    
+    .k-multiselect-wrap .k-select {
+        display: inline-block;
+        position: relative;
+        padding: 0px;
+        margin: 0.1em;
+    }
+    
+    .k-grid .k-button, .k-button {
+        background-color: #34495e;
+        color: #ffffff;
+        border-color: #c5c5c5;
+        cursor: pointer;
+        display: inline-block;
+        font-family: inherit;
+        line-height: 1.72em;
+        margin: 0;
+        padding: 2px 7px;
+        text-align: center;
+        text-decoration: none;
+        text-transform: none;
+    }
+    
+    .k-grid .k-header .k-button:hover, .k-scheduler .k-header .k-button:hover, .k-scheduler .k-scheduler-toolbar .k-scheduler-views li.k-state-hover, .k-scheduler .k-scheduler-toolbar .k-scheduler-views li.k-state-hover .k-link, .k-gantt .k-gantt-toolbar .k-gantt-views li.k-state-hover, .k-gantt .k-gantt-toolbar .k-gantt-views li.k-state-hover .k-link, .k-gantt .k-gantt-toolbar .k-button:hover, .km-pane-wrapper .k-header .k-button:hover {
+        background-color: #34495e;
+        color: #ffffff;
+        border-color: #c5c5c5;
+        margin: 1px 0 1px 2px;    
+    }
+    
+    .k-grid .k-header .k-button, .k-scheduler .k-header .k-button, .k-scheduler .k-header li, .k-scheduler .k-header .k-link, .k-gantt>.k-header li, .k-gantt>.k-header .k-link, .k-gantt-toolbar .k-button, .km-pane-wrapper .k-header .k-button {
+        background-color: #34495e;
+        color: #ffffff;
+        border-color: #c5c5c5;
+        margin: 1px 0 1px 2px;
+    }
+    
+    .k-button, .k-textbox, .k-timepicker, .k-datepicker, .k-datetimepicker {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    .k-multiselect .k-delete {
+        background-position: -160px -80px;
+    }
+    
+    :root *>.k-icon, :root *>.k-sprite, :root *>.k-button-group .k-tool-icon {
+        vertical-align: initial;
+    }
+    
+    .k-icon, .k-sprite, .k-button-group .k-tool-icon {
+        background-repeat: no-repeat;
+        display: inline-block;
+        font-size: 0;
+        height: 12px;
+        line-height: 0;
+        overflow: hidden;
+        text-align: center;
+        width: 16px;
+    }
+    
+    .k-multiselect-wrap .k-input {
+        background-color: transparent;
+        border: 0 none;
+        float: left;
+        height: 27px;
+        line-height: 27px;
+        margin: 1px 0 0;
+        padding: 0.18em 0;
+        text-indent: 0.33em;
+    }
+    
+    .k-list-container {
+        box-sizing: content-box;
+    }
+    
+    .k-multiselect .k-loading-hidden {
+        visibility: hidden;
+    }
+    
+    .k-autocomplete .k-loading, .k-multiselect .k-loading {
+        bottom: 4px;
+        position: absolute;
+        right: 3px;
+    }
+    
+    .k-popup .k-list .k-item, .k-fieldselector .k-list .k-item {
+        line-height: 1.8em;
+        min-height: 1.8em;
+        padding: 1px 5px;
+    }
+    
+    .k-popup .k-item {
+        cursor: default;
+    }
+        
+        .k-list-container.k-popup.k-group.k-reset {
+        background-color: #34495e;
+        color: #ffffff;
+    }
+    
+    #product_filters .k-input, #continentalRegion_filters .k-input,
+    #stage_filters .k-input {
+    color: #ffffff;
+    }
+    
+    /*
+        .k-picker-wrap .k-input, .k-dropdown-wrap .k-input, .k-selectbox .k-input {
+            height: 1.61em;            
+        }
+
+        .k-picker-wrap .k-select, .k-numeric-wrap .k-select, .k-dropdown-wrap .k-select {
+            background-color: buttonface;
+            border-top: 1px solid lightgray;
+            height: 100% !important;
+            width: 18px;
+            text-align: left !important;
+        }   
+
+        .k-select .k-icon.k-i-arrow-s{
+            background-image: url("{!URLFOR($Resource.kendo, 'dropdown-arrow.jpg')}");
+            background-position: 0 0;
+            height: 100% !important;
+            width: 17px !important;
+        }
+        */
+    .k-textbox>input, .k-autocomplete .k-input, .k-picker-wrap .k-input,
+        .k-numeric-wrap .k-input, .k-dropdown-wrap .k-input, .k-selectbox .k-input
+        {
+            text-indent: 0.5em;
+            text-align: left;
+        }
+    .sortingOptions{
+        float: left;
+    }
+    
+    #sortingOptionsDiv .k-dropdown{
+    width: 309px;
+    }
+    
+    .k-select .k-icon.k-i-arrow-s {
+        background-image: url("/resource/1419879129000/kendo/sprite.png");
+        background-position: 1px -31px;
+    }
+    
+    .autocompleteMatch {
+        font-weight: bold;
+        background-color: #42A2D0;
+        padding: 2px 0;
+    }
+    /*Ketan Benegal - Most Recent TPs start*/
+    A:link {
+        COLOR: #009FDA
+    }
+    A:visited {
+        COLOR: #45a1f3 /*The color of the visited link*/
+    }
+    A:hover {
+        COLOR: green /*The color of the mouseover or 'hover' link*/
+    }
+    
+    .mostRecentTpsTable td, .mostRecentTpsTable th {
+        padding: 4px 2px 4px 5px;
+    }
+    
+    .outTdClass {
+        width: 100%;  
+        border: 1;
+    }
+    
+    .k-list-container.k-popup.k-group.k-reset, .k-dropdown-wrap.k-state-default, .k-dropdown-wrap.k-state-default .k-input {
+        background-color: #34495e !important;
+        color: #ffffff !important;
+    }
+    
+    
+    /*Ketan Benegal - Most Recent TPs end*/
+    
+    .bootstrap-switch .bootstrap-switch-handle-on, .bootstrap-switch .bootstrap-switch-handle-off, .bootstrap-switch .bootstrap-switch-label {
+        line-height: 12px;
+        padding: 9px 12px;
+        font-size: 12px;
+    }        
+    
+    .bootstrap-switch, .bootstrap-switch div, .bootstrap-switch span { 
+        border-radius: 0 !important;
+    }
+    
+    .bootstrap-switch-handle-on, .bootstrap-switch-handle-off{
+        background-color: #34495e !important;
+        color: white !important;
+    }
+    
+    
+    .bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label {
+        background-color: #428bca;
+    }
+    
+    .bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label {
+        background-color: #eeeeee;
+        
+    }
+    
+    .bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label .fa {
+        color: white;
+    }
+    
+    .bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label .fa {
+        color: black;
+    }
+    
+    .k-item.k-state-selected{
+        border: medium none;
+        border-color: #34495e;
+        background-color: #34495e !important;
+        color: #ffffff !important;
+    }
+    
+    .k-datepicker .k-input, .k-picker-wrap.k-state-hover .k-input, .k-picker-wrap.k-state-focused .k-input, .k-textbox {
+        background-color: #34495e !important;
+        color: white !important;
+    }
+    
+    .opportunityDetailsTabs .ui-state-default a, .opportunityDetailsTabs .ui-state-default a:link, .opportunityDetailsTabs .ui-state-default a:visited {
+        color: #42a2d0;
+        font-weight: bold;
+    }
+    
+    .opportunityDetailsTabs .ui-state-hover a, .opportunityDetailsTabs .ui-state-hover a:hover, .opportunityDetailsTabs .ui-state-hover a:link, .opportunityDetailsTabs .ui-state-hover a:visited, .opportunityDetailsTabs .ui-state-focus a, .opportunityDetailsTabs .ui-state-focus a:hover, .opportunityDetailsTabs .ui-state-focus a:link, .opportunityDetailsTabs .ui-state-focus a:visited {
+        color: #42a2d0;
+    }
+    
+    .opportunityDetailsTabs .ui-state-active a, .opportunityDetailsTabs .ui-state-active a:link, .opportunityDetailsTabs .ui-state-active a:visited {
+        color: #42a2d0;
+    }   
+    
+    .warningTab {
+        color: yellow !important;
+    } 
+    
+    .mostRecentTPsPanel .k-header{
+        white-space: normal !important;             
+        background-color: white !important; 
+        color: black !important; 
+        font-weight: bold !important;
+    } 
+    
+    .mostRecentTPsPanel .k-header a{
+        color: black !important; 
+    } 
+    
+    .mostRecentTPsPanel .k-grid-header th.k-header > .k-link {
+        padding: 6px;
+    }  
+    
+    .mostRecentTPsPanel td, .mostRecentTPsPanel th {
+        border: none !important;
+        padding: 5px 8px !important;
+    }  
+    
+    .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+        padding: .5em .4em;
+    }
+    
+    .multiselect-container input {
+        display: inline-block;
+    }
+    
+    .multiselect-container .radio input{
+        display: none !important;
+    }
+    
+    .multiselect-container{
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: 200px !important;
+        background-color: #34495e;
+    }
+    
+    .dropdown-menu li a{
+        color:white !important;
+        display: block;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: normal;
+    }
+    
+    .dropdown-menu li.active > a, .dropdown-menu li.selected > a, .dropdown-menu li.active > a.highlighted, .dropdown-menu li.selected > a.highlighted {
+        background: transparent;
+        /*border-style: solid;
+        border-width: 1px;
+        border-color: white;*/
+    }
+    
+    .dropdown-menu li.selected > a, .dropdown-menu li.active > a{
+        background: #34495e !important;
+    }
+    
+    .dropdown-menu .active a:hover{
+        /*color: #444;
+        background: #ebebeb;
+        border-color: #ebebeb;*/
+        background: #34495e !important;
+        border-style: solid;
+        border-width: 1px;
+        border-color: white;       
+    }
+    
+    .btn-default {
+        color: white;
+        background-color: none;
+    }
+    
+    .btn-default .caret {
+        border-top-color: #333D48;
+        color: #34495e;
+        float: right;
+        margin-right: 6px;
+        border-width: 6px 4px;
+    }
+    
+    .btn-default:hover .caret {
+        border-top-color: #283039;
+    }
+    
+    .open > .dropdown-menu {
+        margin-top: -2px !important;
+    }
+    
+    .dropdown-menu {
+        width: 310px;
+        z-index: 1000;
+        /* float: left; */
+        min-width: 160px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        font-size: 2px;
+        text-align: left;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 0px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    }
+    
+    .dropdown-menu ul li, .dropdown-menu ol li {
+        margin-left: 2px;
+        height: 20px;
+    }
+    
+    button.multiselect.dropdown-toggle.btn.btn-default{
+        color: white;
+        width: 100% !important;
+        height: 25px !important;
+        background: #34495e !important;
+        text-align: left;
+        font-family: Arial;
+        font-size: 12px;
+        font-stretch: normal;
+        font-style: normal;
+        font-variant: normal;
+        font-weight: normal;
+        border-radius: 0px;
+    }
+    
+    .multiselect-selected-text{
+        margin-left: 4px;
+    }
+    
+    .multiselect-container>li>a>label {
+        margin: 0;
+        height: 100%;
+        cursor: pointer;
+        font-weight: 400;
+        padding: 3px 4px 3px 4px;
+        font-size: 12px;
+        display: block;
+        position: static;
+        width: 100%;
+    }
+    
+    .multiselect-container>li.multiselect-group label{
+        color:#428bca;
+    }
+    
+    .filter_column_style{
+        padding-left: 0;
+        padding-right: 0;
+        width: 300px;
+    }
+    
+    #sortingOptionsDiv{
+    width: 0;
+    }
+    
+    .k-pager-wrap{
+        padding-bottom: 50px;
+    }
+    
+    .saveContactTab{
+        width: 100px;
+        margin-left: 100px;
+        right: 0px;
+        bottom: 0px;
+        z-index: 1000;
+    }
+    </style>
+    
+    <script>
+        var isUsingTablet = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));        
+    </script>
+    
+    <script id="resourceItemTemplate" type="text/x-kendo-template">
+    # if (!data.searchText) { #
+    <span>#: data.Name #</span>
+    # }else{ 
+    var nameWords = data.Name.split(' ');
+    #
+    <span>
+        #
+    for(var i = 0; i < nameWords.length; i++){
+        var searchTextMatch = nameWords[i].match(new RegExp('^' + searchText, 'i'));
+        if(searchTextMatch){
+            var restOfName = nameWords[i].split(new RegExp('^' + searchText, 'i'))[1];
+            #
+            <strong class="autocompleteMatch">#: searchTextMatch[0] #</strong>#: restOfName #
+            # }else{ #
+            #: nameWords[i] #
+            # }
+        } #
+        </span>
+        # } #
+        </script>
+    
+    <script type="text/javascript">   
+    var tabCounter = 0;
+    var openedOppTabs = [];        
+    var notesByOppId = {};         
+    currentTopicsByOppId = {}; 
+    
+    
+    function makeOppDraggable(opp) {
+        $( opp ).draggable({
+            snap: ".snapPanel",
+            revert: "invalid",
+            helper: function () {
+                // We removeAttr('style') to get rid of the transform css that isotope added.
+                return $(this).clone().removeAttr('style').removeClass('isotope-item').addClass('drag-helper').appendTo('body');
+            },
+            start: function () {
+                $(this).hide();
+            },
+            stop: function () {
+                $(this).show();                                       
+            },
+            zIndex: 100
+        });
+    }
+    
+    function makeSnapPanelDroppable(panel) {
+        $( panel ).droppable({
+            hoverClass: "snapPanelHover",
+            drop: function (event, ui) {
+                var $this = $(this);
+                // We removeAttr('style') to get rid of the position:absolute that draggable adds
+                // Then we append a clone so that we can use isotope's convenient remove() method.
+                // By default clone doesn't include data...have a look at the docs if you have trouble                        
+                
+                // Clone the element
+                var $opp = ui.draggable.clone().removeAttr('style').removeClass('.item');                    
+                
+                // Remove the Opp from the old Panel
+                ui.draggable.parent().isotope('remove', ui.draggable);                                              
+                
+                // Set filter variables
+                //setFilterVariables();
+                
+                // Call action function to update Opportunity record
+                updateOpportunityStage($opp.attr('id'), $this.attr('data-value'));   
+            }
+        });
+    }                 
+    </script>
+    
+    
+    <apex:outputPanel id="errorPanel">
+        <apex:pageMessages escape="false"/>
+    </apex:outputPanel>
+    
+    <apex:outputPanel id="createOpportunityPanel">
+        <apex:outputPanel rendered="{!isCreatingPGIMOpportunity}">
+            <script>   
+            $('#checkingDuplicates').toggleClass('hidePanel');
+            
+            var userResponse = true;            
+            
+            if(userResponse){
+                //setFilterVariables();                    
+                //createPGIMOpportunityForAccount('{!selectedAccId}');                                                                           
+                $("#newOpportunityForAccountPanel").dialog( "close" );                    
+                openTabbedPanel();                                                
+            }
+            </script>
+        </apex:outputPanel>
+    </apex:outputPanel>
+    
+    <apex:form id="mainForm">
+        <apex:actionRegion >
+            <apex:inputHidden id="keywordFilterId" value="{!keywordFilter}" />
+            <apex:inputHidden id="tierFilterId" value="{!tierFilter}" />
+            <apex:inputHidden id="activitiesGroupFilterId"
+                              value="{!activitiesGroupFilter}" />
+            <apex:inputHidden id="activitiesDaysRangeFilterId"
+                              value="{!activitiesDaysRangeFilter}" />
+            <apex:inputHidden id="stageBucketsFilterId"
+                              value="{!stageBucketsFilter}" />
+            <apex:inputHidden id="productsFilterId" value="{!productsFilter}" />
+            <apex:inputHidden id="regionsFilterId" value="{!regionsFilter}" />
+            <apex:inputHidden id="sortById" value="{!sortBy}" />
+            <apex:inputHidden id="sortOrderId" value="{!sortOrder}" />
+            
+            <apex:actionFunction immediate="false"
+                                 action="{!updateOpportunityStage}" name="updateOpportunityStage"
+                                 reRender="errorPanel, mainPanel, stageBucketsDropPanel"
+                                 status="loading">
+                <apex:param name="param1" assignTo="{!selectedOppId}" value="" />
+                <apex:param name="param2" assignTo="{!oppStageName}" value="" />
+            </apex:actionFunction>
+            
+            <apex:actionFunction name="displayOppRecord"
+                                 action="{!displayOpportunityRecord}" immediate="true"
+                                 reRender="oppRecordTab, errorPanel" status="loading"
+                                 oncomplete="$('#tabbedPanel').parent().removeClass('hidePanel'); ">
+                <apex:param name="firstParam" assignTo="{!selectedOppId}" value="" />
+            </apex:actionFunction>
+            
+            
+            
+            
+            
+            <apex:actionFunction name="refreshOpportunityList"
+                                 action="{!refreshOpportunityList}"
+                                 reRender="errorPanel, mainPanel, selectedAccountManagerName, stageBucketsDropPanel"
+                                 status="loading"
+                                 oncomplete="$('#lessInfo').addClass('is-checked');$('#moreInfo').removeClass('is-checked');">
+                <apex:param name="param1" assignTo="{!filterCriteriaChanged}"
+                            value="" />
+                <apex:param name="param2" assignTo="{!viewingAsAll}" value="" />
+            </apex:actionFunction>
+            
+            <apex:actionFunction name="saveOpportunityFields"
+                                 action="{!saveOpportunityFields}"
+                                 reRender="errorPanel, updatedOpportunityPanel, mainPanel, stageBucketsDropPanel"
+                                 status="loading">
+                <apex:param name="param1" assignTo="{!selectedOppId}" value="" />
+                <apex:param name="param2"
+                            assignTo="{!genericOpportunity.LeadSource}" value="" />
+                <apex:param name="param3" assignTo="{!genericOpportunity.StageName}"
+                            value="" />
+                
+            </apex:actionFunction>
+            
+            
+        </apex:actionRegion>
+        
+        <apex:actionFunction name="nextPage" action="{!nextPage}"
+                             reRender="errorPanel, mainPanel" status="loading"
+                             oncomplete="$('html, body').animate({scrollTop: $('#opportunitytListPanel')}, 0);" />
+        
+        <apex:actionFunction name="previousPage" action="{!previousPage}"
+                             reRender="errorPanel, mainPanel" status="loading"
+                             oncomplete="$('html, body').animate({scrollTop: $('#opportunitytListPanel')}, 0);" />
+        
+        <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <apex:outputPanel layout="block" styleClass="loadingStyle">
+                    <apex:outputPanel layout="block" style="margin-top: 5px;">
+                        <img height="16" width="16" src="/img/loading.gif" />
+                        <apex:outputLabel style="font-size: 15px;color:white; font-weight:bold;">
+                            Loading...
+                        </apex:outputLabel>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </apex:facet>
+            <apex:facet name="stop" />
+        </apex:actionstatus>
+        
+        <style>
+            .clientContactLabel {
+            margin-right: 10px;
+            }
+            
+            .oppFieldLabel {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 2px;
+            }
+            
+            .saveButton {
+            background-color: #42A2D0;
+            padding: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 5px;
+            display: inline-block;
+            }
+            
+            input.saveButton {
+            border: medium none;
+            background-color: #42A2D0;
+            padding: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 5px;
+            display: inline-block;
+            }
+            
+            .saveButton:HOVER {
+            cursor: pointer;
+            opacity: 0.7;
+            }
+            
+            .saveButton.cancelButton {
+            background-color: transparent;
+            color: rgb(66, 162, 208);
+            font-size: 12px;
+            margin-top: 5px;
+            padding: 7px;
+            width: 40px;
+            }
+            
+            input.form-control {
+            height: 21px;
+            }
+            
+            .lookupInput a {
+            border: none;
+            }
+            
+            .multiSelectPicklistRow select {
+            max-width: 150px;
+            max-height: 70px;
+            }
+            
+            .multiSelectPicklistCell a img {
+            background-color: white;
+            height: 6px;
+            }
+            
+            .multiSelectPicklistCell a img:hover {
+            background-color: white;
+            height: 6px;
+            }
+            .activityLabel {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+            }
+            .activityLabel:FIRST-CHILD {
+            margin-top: 0px;
+            }
+            .activityInput {
+            width: 100%;
+            }
+            .activityInput.textarea {
+            height: 100px;
+            }
+            
+            .panel-padding{
+            padding: 10px !important;
+            }
+            
+            .fa-info-circle{
+            font-size: 20px;
+            color: #42A2D0;
+            }
+            
+            .fa-binoculars{
+            font-size: 25px;
+            }
+            
+            #headerToolbar .fa:hover, #headerToolbar .fa-stack:hover{
+            color:#428bca;
+            cursor: pointer;
+            }
+            
+            .fa-square-o:hover{
+            color:#428bca;
+            }
+            
+            .fa-file-excel-o{
+            font-size: 25px;
+            }
+            
+        </style>
+        
+        <div id="oppStageBucketPanel" style="display: none;">
+            <select id="oppStageBucketOptions">
+                <apex:repeat var="bucketName" value="{!sortedStageBuckets}">
+                    <apex:outputPanel layout="none" rendered="{!bucketName <> 'All'}">
+                        <option value="{!bucketName}">{!bucketName}</option>
+                    </apex:outputPanel>
+                </apex:repeat>
+            </select>
+        </div>
+        
+        
+        
+        <div id="newOpportunityForAccountPanel" style="display: none;">
+            <label class="clientContactLabel">Company Name</label>
+            <apex:inputField value="{!genericOpportunity.AccountId}"
+                             id="opportunityForAccountId" styleClass="form-control" />
+            
+            <div id="checkingDuplicates" class="hidePanel">
+                <div style="margin-top: 5px;">
+                    <img width="16" height="16" src="/img/loading.gif" />
+                    <label
+                           style="font-size: 12px; font-weight: bold;">Checking for
+                        duplicates...</label>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div id="oppFieldsPanel" style="display: none;">
+            <div style="color: red; font-weight: bold;"
+                 id="opportunityErrorMsgPanel"/>
+            <table style="width: 100%">
+                <tr>
+                    <td>
+                        <label class="oppFieldLabel">{!$ObjectType.Opportunity.Fields.StageName.Label}</label>
+                        <apex:inputField value="{!genericOpportunity.StageName}"
+                                         id="oppStageName" styleClass="btn-lg btn-inverse" />
+                    </td>
+                </tr>
+                <tr>                     
+                    <td>
+                        <label class="oppFieldLabel">{!$ObjectType.Opportunity.Fields.LeadSource.Label}</label>
+                        <apex:inputField value="{!genericOpportunity.LeadSource}"
+                                         id="oppLeadSource" styleClass="btn-lg btn-inverse" />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <div class="saveButton" id="saveOppButton" style="width:100px">Save</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        
+        <!-- This panel is used to refresh the tiles after the Opportunity tab fields are updated -->
+        <apex:outputPanel style="display:none;" id="updatedOpportunityPanel">
+            
+            <apex:outputPanel rendered="{!NOT(ISBLANK(updatedOpportunityTile.opp.Id))}">
+                
+                <script>                  
+                // Clear error msg panel      
+                $('#opportunityErrorMsgPanel_{!updatedOpportunityTile.opp.Id}').text(''); 
+                
+                if({!isSaving}){
+                    // Refresh the current Tab label
+                    $currentTabLabel = $('#tab_{!updatedOpportunityTile.opp.Id}_Label');                   
+                    $currentTabLabel.removeClass("tier1 tier2 tier3 tier9").addClass("{!SUBSTITUTE(updatedOpportunityTile.opp.StageName, ' ', '')}");                 
+                    
+                    //Refresh current Tab Content
+                    $currentTabContent = $('#tab_{!updatedOpportunityTile.opp.Id}_Content');
+                    
+                    // Refresh the Chatter Section and Auto-height
+                    var oppChatterPanel = $('#chatterComponentPanel_{!updatedOpportunityTile.opp.Id}');                        
+                    oppChatterPanel.attr('src', oppChatterPanel.attr('src'));
+                    oppChatterPanel.iframeAutoHeight({minHeight: 400, debug: false});                        
+                }
+                </script>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!NOT(ISBLANK(updatedOpportunityErrorMsg))}">
+                <script>                                  
+                $('#opportunityErrorMsgPanel_{!selectedOppId}').text('{!JSENCODE(updatedOpportunityErrorMsg)}');                                                
+                </script>
+            </apex:outputPanel>
+            
+        </apex:outputPanel>
+        
+    </apex:form>
+    
+    <!-- jed header for filter -->
+    <table style="width: 100%; vertical-align: top;">
+        
+        <tr>
+            <td style="width: 100%; vertical-align: top;" colspan="3">
+                <table style="width: 100%; background-color: #E6ECF4;">
+                    <tr>
+                        <td style="width: 30%">
+                            <div class="button_group">                            
+                                <table style="width: 100%; display: inline-block;">
+                                    <tr>
+                                        <td rowspan="2" style="width: 45px;">
+                                            <span>Filter By</span>
+                                        </td>
+                                        <!-- select options
+<td>
+<div class="button_group filter_column_style"
+data-filter-group="activityDateFilter">
+<select id="activityDateOptions">
+<option value="a_all" class="btn-default">All Open &amp; Completed Activities</option>
+<optgroup style="text-align: left;" label="Open Activities"
+id="openActivitiesGroup">
+<option value="b_0-14" class="btn-default">Due Date:
+0-14 days</option>
+<option value="c_15-+" class="btn-default">Due Date:
+15+ days</option>
+</optgroup>
+
+<optgroup style="text-align: left;"
+label="Completed Activities" id="completedActivitiesGroup">
+<option value="d_0-14" class="btn-default">Last
+Activity Date: 0-14 days</option>
+<option value="e_15-30" class="btn-default">Last
+Activity Date: 15-30 days</option>
+<option value="f_31-60" class="btn-default">Last
+Activity Date: 31-60 days</option>
+<option value="g_61-+" class="btn-default">Last
+Activity Date: 61+ days</option>
+</optgroup>
+</select>
+</div>
+</td> -->
+                                    </tr>
+                                    <tr>
+                                        <!--
+<td>
+<div class="button-group filter_column_style">
+<select id="allFilterMultiSelect" multiple="multiple"></select>
+</div>                                            
+</td>
+-->
+                                    </tr>
+                                </table>
+                                
+                            </div>
+                        </td>
+                        
+                        <td style="width: 30%; text-align: center;">
+                            <div id="keyword_filters" class="button_group" data-filter-group="keyword" style="width: 100%;">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td colspan="3"><span class="fa fa-info-circle" onmouseover="$('#searchCriteria').css('display', 'block');"
+                                                              onmouseout="$('#searchCriteria').css('display', 'none'); $(this).css('opacity', '1');"
+                                                              style="left: 5px; position: relative; top: 6px; width: 15px; margin-right:10px;" />
+                                            <div id="searchCriteria" class="tooltipItem">
+                                                <apex:outputText value="Search by: Company, Consultant, City/State, Region, Assets & Topics"></apex:outputText>
+                                            </div>
+                                            
+                                            <div class="form-group" style="display: inline-block;width:90%">
+                                                <span class="input-icon fui-search" id="searchIcon"
+                                                      data-filter="allFieldsFilter"></span> <input
+                                                                                                   style="height: 21px; padding: 8px 25px;width: 92%;" id="searchText"
+                                                                                                   type="text" class="form-control"
+                                                                                                   placeholder="Enter keyword" /> <span
+                                                                                                                                        id="clearKeywordFilters" class="input-icon fui-cross"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                        
+                        <td>
+                            <!--
+<div id="filters" class="button_group" data-filter-group="tiers" style="float:right; width: 360px;">
+<table style="width: 100%;">
+<tr>
+<td>
+<div class="col-xs-3">
+<a data-filter="*"
+class="btn-block btn-lg btn-default btn-inverse">All</a>
+</div>
+</td>
+<td>
+<div class="col-xs-3">
+<a data-filter=".tier1"
+class="btn-block btn-lg btn-default tier1">Tier 1</a>
+</div>
+</td>
+<td>
+<div class="col-xs-3">
+<a data-filter=".tier2"
+class="btn-block btn-lg btn-default tier2">Tier 2</a>
+</div>
+</td>
+<td>
+<div class="col-xs-3">
+<a data-filter=".tier3"
+class="btn-block btn-lg btn-default tier3">Tier 3</a>
+</div>
+</td>
+<td>
+<div class="col-xs-3">
+<a data-filter=".tier9" class="btn-block btn-lg btn-default">No
+Tier</a>
+</div>
+</td>
+</tr>
+</table>
+</div>
+-->
+                        </td>
+                        
+                    </tr>
+                    
+                    <tr>
+                        <!--
+<td style="width: 30%;">
+<div class="button_group">
+<table style="display: inline-block; width: 100%;" id="sorting">
+<tr>
+<td style="width: 45px;">
+<span>Sort by</span>
+</td>
+<td>
+<div class="sortingOptions" id="sortingOptionsDiv">
+<select id="sortingOptions" class="button_group filter_column_style">
+<option value="consultant_asc">Consultant - A to Z</option>
+<option value="consultant_desc">Consultant - Z to A</option>
+<option value="company_asc" selected="selected">Company Name - A to Z</option>
+<option value="company_desc">Company Name - Z to A</option>
+<option value="assets_desc">Assets - High to Low</option>
+<option value="assets_asc">Assets - Low to High</option>
+<option value="tier_desc">Tier - High to Low</option>
+<option value="tier_asc">Tier - Low to High</option>
+<option value="totalDaysOpened_desc">Days Open - High to Low</option>
+<option value="totalDaysOpened_asc">Days Open - Low to High</option>
+</select>
+</div>
+</td>                                        
+</tr>
+</table>
+</div>
+</td>
+-->
+                        <td colspan="2" style="text-align: right;">
+                            <div id="headerToolbar" class="button_floating">
+                                <apex:outputPanel layout="block" id="selectedAccountManagerName">
+                                    <span style="font-weight: bold;">Viewing as: </span>
+                                    <apex:outputText rendered="{!NOT(viewingAsAll)}"
+                                                     value="{!selectedAccountManagerName}" />
+                                    <apex:outputText rendered="{!viewingAsAll}" value="All" />
+                                </apex:outputPanel>
+                                
+                                <div id="selectAccountManager" class="fa fa-binoculars fa-lg filterImg"
+                                     title="Account Manager"
+                                     onclick=" $('#accountManagerSelectionPanel').dialog( 'open' );" />
+                                <div id="newOpportunity" class="filterImg"
+                                     title="New Opportunity"
+                                     onclick=" $('#newOpportunityForAccountPanel').dialog( 'open' );">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle-o fa-stack-2x"></i>
+                                        <i class="fa fa-plus fa-stack-1x"></i>
+                                    </span>
+                                </div>
+                                <div id="opportunityReport1" class="filterImg fa fa-lg fa-file-excel-o"
+                                     title="Opportunity Report 1"
+                                     onclick="openPGIMOpportunityReport1();"/>    
+                                <!--
+<input id="lessMoreInfoSwitchFilter" type="checkbox" name="lessMoreInfoSwitchFilter" checked="checked" class="button_group" />
+-->
+                            </div>
+                        </td>
+                        
+                    </tr>
+                    
+                </table>
+            </td>
+        </tr> 
+        
+        <tr>
+            <td id="opportunitytListPanel"
+                style="width: 100%; vertical-align: top;">
+                <apex:outputPanel id="mainPanel">
+                    
+                    <div id="container">
+                        <apex:repeat value="{!opportunityTiles}" var="oppWrapper">
+                            
+                            <!-- jed -->
+                            <div id="{!oppWrapper.opportunityId}"                               
+                                 class="item {!SUBSTITUTE(oppWrapper.opp.StageName, ' ', '')}">
+                                <!-- class="item {!SUBSTITUTE(oppWrapper.opp.StageName, ' ', '_')}  {!IF(ISBLANK(oppWrapper.opp.Id), 'hidePanel', '')}"> -->
+                                
+                                <div class="tierBanner"/>
+                                
+                                <table style="width: 230px; margin: 12px 10px 10px;"
+                                       cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td>
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td style="width: 70%; vertical-align: top;">
+                                                        
+                                                        <apex:outputText style="font-weight:bold;"
+                                                                         
+                                                                         value="{!oppWrapper.opp.StageName}" />
+                                                    </td>
+                                                    <td
+                                                        style="text-align: right; width: 30%; vertical-align: top;">
+                                                        <apex:outputText value="{!IF(oppWrapper.opp.StageName == 'Stage A', 'Stage A', oppWrapper.opp.StageName)}"
+                                                                         style="font-size: 10px;"
+                                                                         styleClass="moreInfoToggleField stageName" />
+                                                        <apex:outputText value="{!oppWrapper.opp.StageName}"
+                                                                         styleClass="moreInfoToggleField hidePanel totalDaysOpened" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+                                
+                                <div class="tileBottomRow">
+                                    <apex:outputText styleClass="totalPlanAssets moreInfoToggleField"
+                                                     value="{0, number, $###,###,###}">
+                                        <apex:param value="" />
+                                    </apex:outputText>
+                                    &nbsp;
+                                    
+                                    <apex:outputText value="{0,date,MM/dd/yy}"
+                                                     styleClass="lastActivityDate">
+                                        <apex:param value="{!oppWrapper.lastActivityDate}" />
+                                    </apex:outputText>
+                                </div>
+                                
+                            </div>
+                        </apex:repeat>
+                    </div>
+                    
+                    <script type="text/javascript">                                                                                  
+                    $(function() {                                  
+                        
+                        // init Isotope
+                        var $container = $('#container').isotope({
+                            itemSelector: '.item',
+                            layoutMode: 'masonry',
+                            masonry: {
+                                columnWidth: 250,
+                                gutter: 10
+                            }
+                        });                                                                                                   
+                        
+                        if(!isUsingTablet){
+                            // expand Opportunity Record Detail View
+                            $container.on('dblclick', '.item', function() {
+                                showTabbedPanelFromTile(this);
+                            });
+                        }else{ 
+                            $('.companyName').css('text-decoration', 'underline').css('cursor', 'pointer');
+                            $container.on('click', '.companyName', function() {
+                                showTabbedPanelFromTile($(this).closest('.item')[0]);
+                            });                
+                        }
+                        
+                        $(".item").each(function (i, opp) {
+                            makeOppDraggable(opp);
+                        });
+                        
+                    });     
+                    </script>
+                    
+                    
+                    <div id="pagination" style="text-align: center; margin-top: 20px;">
+                        <apex:outputPanel rendered="{!currentPage > 0}" layout="none">
+                            <span title="Previous Page" onclick="previousPage();"
+                                  class="oppDetailHeaderLink">&lt;Previous</span>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!currentPage == 0}" layout="none">
+                            <span title="Previous Page" class="oppDetailHeaderLink"
+                                  style="color: gray; text-decoration: none; cursor: default;">&lt;Previous</span>
+                        </apex:outputPanel>
+                        
+                        <apex:outputText value="{!currentPage + 1} of {!totalPages + 1}"
+                                         style="margin-left:30px; color:gray; font-weight: bold;" />
+                        
+                        <apex:outputPanel rendered="{!currentPage < totalPages}"
+                                          layout="none">
+                            <span title="Next Page" onclick="nextPage();"
+                                  class="oppDetailHeaderLink">Next&gt;</span>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!currentPage == totalPages}"
+                                          layout="none">
+                            <span title="Next Page" class="oppDetailHeaderLink"
+                                  style="color: gray; text-decoration: none; cursor: default;">Next&gt;</span>
+                        </apex:outputPanel>
+                    </div>
+                    
+                    <div id="currentOpportunityIdsStrPanel" style="display: none;">
+                        {!currentOpportunityIdsStr}</div>
+                    
+                </apex:outputPanel>
+            </td>
+            
+            
+            <td id="tierDropboxPanel" style="vertical-align: top; width: 250px;">
+                <apex:outputPanel id="stageBucketsDropPanel">
+                    <table id="tiersContainer" style="width: 250px;">
+                        <tr>
+                            <!-- jed -->
+                            <td class="snapPanel" id="StageA_SnapPanel"
+                                data-value="Stage A">Stage A <apex:outputPanel styleClass="snapPanelTotals">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 40% !important;">
+                                            <apex:outputLabel value="Count: " />
+                                            <apex:outputText value="{!opportunityCountByStageBucket['Stage A']}" />
+                                        </td>
+                                        <td style="width: 60% !important;">
+                                            <apex:outputLabel value="Mandate Size Mil: " />
+                                            <apex:outputText value="$ {0, number, ###,###,###,##0.0}">
+                                                <apex:param value="{!mandateSizeTotalByStageBucket['Stage A']}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="snapPanel" id="StageB_SnapPanel"
+                                data-value="Stage B">Stage B<apex:outputPanel styleClass="snapPanelTotals">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 40% !important;">
+                                            <apex:outputLabel value="Count: " />
+                                            <apex:outputText value="{!opportunityCountByStageBucket['Stage B']}" />
+                                        </td>
+                                        <td style="width: 60% !important;">
+                                            <apex:outputLabel value="Mandate Size Mil: " />
+                                            <apex:outputText value="$ {0, number, ###,###,###,##0.0}">
+                                                <apex:param value="{!mandateSizeTotalByStageBucket['Stage B']}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="snapPanel" id="StageC_SnapPanel"
+                                data-value="Stage C">Stage C<apex:outputPanel styleClass="snapPanelTotals">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 40% !important;">
+                                            <apex:outputLabel value="Count: " />
+                                            <apex:outputText value="{!opportunityCountByStageBucket['Stage C']}" />
+                                        </td>
+                                        <td style="width: 60% !important;">
+                                            <apex:outputLabel value="Mandate Size Mil: " />
+                                            <apex:outputText value="$ {0, number, ###,###,###,##0.0}">
+                                                <apex:param value="{!mandateSizeTotalByStageBucket['Stage C']}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        
+                        
+                        
+                        <!-- Ketan Benegal - Commented out.                         -->
+                        <!--                         <tr>
+<td class="snapPanel" id="won_SnapPanel" data-value="Won">
+Won
+<apex:outputPanel styleClass="snapPanelTotals">
+<table style="width: 100%">
+<tr>
+<td style="width:40% !important;">
+<apex:outputLabel value="Count: "/>
+<apex:outputText value="{!opportunityCountByStageBucket['Won']}"/>                                        
+</td>
+<td style="width:60% !important;">                                                                                        
+<apex:outputLabel value="Mandate Size Mil: "/>
+<apex:outputText value="${0, number, ###,###,###,##0.0}">                   
+<apex:param value="{!mandateSizeTotalByStageBucket['Won']}"/>                                            
+</apex:outputText>                                                                                                                         
+</td>
+</tr>
+</table>
+</apex:outputPanel> 
+</td>
+</tr>
+-->
+                        <tr>
+                            <td class="snapPanel" id="lost_SnapPanel" data-value="Lost">
+                                Lost/No Bid</td>
+                        </tr>
+                    </table>
+                    
+                    <script>                        
+                    $(".snapPanel").each(function (i, panel) {
+                        makeSnapPanelDroppable(panel);
+                    });      
+                    
+                    var $scrollingDiv = $("#tiersContainer");
+                    $(window).scroll(function(){            
+                        $scrollingDiv
+                        .stop()
+                        .animate({"marginTop": (calculateScrollingDivMargin()) + "px"}, "slow" );           
+                    });
+                    
+                    if(isUsingTablet){
+                        applyCSSTabletUpdatesOnStageBucketsPanel();
+                    }               
+                    </script>
+                    
+                </apex:outputPanel>
+            </td>
+            
+            <td style="vertical-align: top;" class="hidePanel">
+                <div id="tabbedPanel" class="hidePanel"
+                     style="position: relative; width: 100%;">
+                    <div id="closeAllTabs" title="Close All Tabs"
+                         class="closeAllTabsImg closeAllTabs"/>
+                    
+                    <div id="tabs">
+                        <ul>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    
+    
+    
+    <apex:outputPanel layout="block" id="oppRecordTab"
+                      style="display: none;">
+        <apex:outputPanel layout="block"
+                          rendered="{!NOT(ISBLANK(selectedOpp))}">
+            
+            <div id="tab_{!selectedOpp.Id}_Label"
+                 class="tabLabel {!IF(NOT(ISBLANK(selectedOpp.Account.Name)), 'tier' + selectedOpp.Account.Name, 'tier9')} {!SUBSTITUTE(selectedOpp.StageName, ' ', '_')}">
+                <div class="ui-icon ui-icon-close" style="float: right;"
+                     role="presentation">Remove Tab</div>
+                <div class="tierBanner" style="top: 0px; left: 0px;"/>
+                <div style="display: inline-block; padding-top: 3px;">
+                    <a href="#tab_{!selectedOpp.Id}_Content"
+                       class="{!CASE(selectedOpp.Account.Name, 'Terminated' ,'companyName truncateText2', '', 'companyName truncateText', 'companyName truncateText3')}">{!selectedOpp.Account.Name}</a>
+                </div>
+            </div>
+            
+            <div id="tab_{!selectedOpp.Id}_Content">
+                <table style="width: 100%; border-spacing: 0px;">
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <div class="oppRecordMainPanel">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 48%; vertical-align: top;">
+                                            <span>
+                                                <a href="/{!selectedOpp.Account.Id}" class="oppName"
+                                                   target="_blank" title="{!selectedOpp.Account.Name}">
+                                                    <apex:outputText value="{!selectedOpp.Account.Name}" />
+                                                </a>
+                                            </span>
+                                            <apex:outputText styleClass="instClientStatus"
+                                                             value=" ({!selectedOpp.Account.Name})"
+                                                             rendered="{!NOT(ISBLANK(selectedOpp.Account.Name))}" />
+                                            
+                                            <span class="fa fa-info-circle" onmouseover="$('#accountManagerPanel_{!selectedOpp.Id}').css('display', 'block');"
+                                                  onmouseout="$('#accountManagerPanel_{!selectedOpp.Id}').css('display', 'none'); $(this).css('opacity', '1');"
+                                                  style="left: 5px; position: relative; top: 6px; width: 15px; margin-right:10px;" />                                        
+                                        </td>                                        
+                                    </tr>
+                                    <tr>
+                                        <td id="clientContactContainer_{!selectedOpp.Id}"/>
+                                        <td id="fieldConsultantContainer_{!selectedOpp.Id}"
+                                            style="text-align: right;"/>
+                                    </tr>                                
+                                    <tr>
+                                        <td colspan="2">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td style="padding-top: 10px;vertical-align: top;">
+                                                        <div id="opportunityDetailsTabs_{!selectedOpp.Id}" class="opportunityDetailsTabs">
+                                                            <ul>
+                                                                <li>
+                                                                    <a id="notesLink_{!selectedOpp.Id}" href="#notesTab_{!selectedOpp.Id}">Next Steps</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a id="topicsLink_{!selectedOpp.Id}" href="#topicsTab_{!selectedOpp.Id}">Topics</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a id="mostRecentTPsLink_{!selectedOpp.Id}" href="#mostRecentTPsTab_{!selectedOpp.Id}">Touch Points</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a id="mostRecentMtgsLink_{!selectedOpp.Id}" href="#mostRecentMtgsTab_{!selectedOpp.Id}">Meetings</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a id="contactsLink_{!selectedOpp.Id}" href="#contactsTab_{!selectedOpp.Id}">Contacts</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a id="companySensitivities_{!selectedOpp.Id}" href="#companySensitivitiesPanel_{!selectedOpp.Id}">Sensitivities</a>
+                                                                </li>
+                                                            </ul>
+                                                            <div id="topicsTab_{!selectedOpp.Id}" class="hidePanel topics panel-padding">
+                                                                <input id="topicsInput_{!selectedOpp.Id}"
+                                                                       style="width: 400px" />
+                                                            </div> 
+                                                        </div>
+                                                    </td>       
+                                                </tr>                                                
+                                            </table>
+                                        </td>
+                                    </tr>                                    
+                                </table>
+                            </div>
+                            
+                            <div style="padding: 10px 0px;">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td class="opportunityTabSection"
+                                            id="oppFieldsContainer_{!selectedOpp.Id}"/>
+                                    </tr>
+                                    
+                                    
+                                </table>
+                            </div>
+                        </td>
+                        
+                        <td style="vertical-align: top; width: 200px; padding-left: 5px;"
+                            class="newsFeedsColumn">
+                            <div>
+                                <div class="feedTitle">
+                                    <apex:image value="{!URLFOR($Resource.masonry, 'images/google_news_logo.jpg')}"
+                                                height="30px" />
+                                </div>
+                                
+                                <ul id="google_news_feed_{!selectedOpp.Id}"
+                                    class="contact_feed google_feed">
+                                    
+                                </ul>
+                            </div> 
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </apex:outputPanel>
+    </apex:outputPanel>
+</apex:page>

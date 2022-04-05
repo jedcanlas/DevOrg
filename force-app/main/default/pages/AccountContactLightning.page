@@ -1,0 +1,48 @@
+<!--
+  @description       : 
+  @author            : Jed Canlas - DNATA
+  @group             : 
+  @last modified on  : 05-27-2021
+  @last modified by  : Jed Canlas - DNATA
+  Modifications Log 
+  Ver   Date         Author               Modification
+  1.0   05-27-2021   Jed Canlas - DNATA   Initial Version
+-->
+
+<apex:page >
+    <apex:includeLightning />
+    
+    <div id="lightning" />
+
+    <script>
+    $Lightning.use("c:LightningDataTableApp", function() {
+        
+        $Lightning.createComponent("c:LightningDataTableCmp",
+                                   { 
+                                        
+                                   },
+                                   "lightning",
+                                   function(cmp) {
+                                       console.log('Component created, do something cool here');
+                                   });
+        /*
+        $Lightning.createComponent("c:lightning_pagination",
+                                   { 
+                                        
+                                   },
+                                   "lightning",
+                                   function(cmp) {
+                                       console.log('Component created, do something cool here');
+                                   });   */      
+                                   
+       $Lightning.createComponent("c:Lightning_Pagination_Table",
+                                   { 
+                                        
+                                   },
+                                   "lightning",
+                                   function(cmp) {
+                                       console.log('Component created, do something cool here');
+                                   });                     
+    });
+    </script>
+</apex:page>

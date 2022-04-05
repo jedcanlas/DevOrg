@@ -1,0 +1,33 @@
+<apex:page controller="renderingPageController">
+
+    <apex:includeLightning />
+    <div id="lightning" />
+<apex:form >
+  <apex:actionStatus id="pageStatus">
+                <apex:facet name="start">
+                    <div aura:id="loadingSpinner" class="slds-spinner_container slds-show">
+                        <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                </apex:facet>
+  </apex:actionStatus>
+  </apex:form>
+  <apex:form id="test">
+
+      <!--<apex:pageblock id="test2">-->
+          <apex:outputPanel id="p1" rendered="{!renderb1}">
+              <apex:commandButton value="b1" action="{!renderb2}" rerender="test,p1,p2" status="pageStatus"/>
+              <!--<apex:actionFunction name="b1support"  action="{!renderb2}" rerender="test"/>-->
+              <apex:outputText >{!accList[0].name}</apex:outputText>
+          </apex:outputPanel>
+          <!--</apex:pageBlock>-->
+          <!--<apex:pageblock id="test3">-->
+          <apex:outputPanel id="p2" rendered="{!renderb2}">
+              <apex:commandButton value="b2" action="{!renderb1}" rerender="test,p1,p2" status="pageStatus"/>
+              <apex:outputText >{!conList[0].firstname}</apex:outputText>
+          </apex:outputPanel>
+      <!--</apex:pageblock>-->
+  </apex:form>
+</apex:page>

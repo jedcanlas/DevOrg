@@ -1,0 +1,11 @@
+<apex:page controller="exportExcel" action="{!exportToExcel}" readOnly="true" contentType="application/vnd.ms-excel#ConsignmentSearchData.csv">{!header}
+<apex:form >
+    	<apex:pageblock >
+        	<apex:pageBlockTable value="{!a}" var="rec">
+            	<apex:repeat value="{!fieldNames}" var="fld">
+                	<apex:column value="{!rec[fld]}"/>
+                </apex:repeat>
+            </apex:pageBlockTable>        
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

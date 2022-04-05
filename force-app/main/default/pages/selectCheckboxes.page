@@ -1,0 +1,51 @@
+<!-- Page: -->
+<apex:page controller="sampleCon">
+
+
+<script type="text/javascript">
+window.onload = init;
+ 
+function init() {
+   tables = document.getElementsByTagName('table');
+   for (i = 0; i < tables.length; i++) {
+      table = tables[i];
+      if (table.className == 'makeRows') {
+         makeRows(table, 3);
+      } 
+   } 
+}
+
+function makeRows(table, columnCount) {
+   cells = table.rows[0].cells;
+   cellCount = cells.length;
+   rowCount = Math.ceil(cellCount / columnCount);
+  
+   for (i = 0; i < rowCount; i++) {
+      table.insertRow(0);
+   }
+   for (i = 0; i < cellCount; i++) {
+      row = Math.floor(i / columnCount);
+      table.rows[row].appendChild(cells[i].cloneNode(true));
+   }
+   table.deleteRow(rowCount);
+} 
+</script>
+
+    <apex:form >
+        <apex:selectCheckboxes value="{!countries}" styleClass="makeRows"
+>
+            <apex:selectOptions value="{!items}"/>
+        </apex:selectCheckboxes><br/>
+        <apex:commandButton value="Test" action="{!test}" rerender="out" status="status"/>
+    </apex:form>
+    <apex:outputPanel id="out">
+        <apex:actionstatus id="status" startText="testing...">
+            <apex:facet name="stop">
+                <apex:outputPanel >
+                    <p>You have selected:</p>
+                    <apex:dataList value="{!countries}" var="c">{!c}</apex:dataList>
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:outputPanel>
+</apex:page>

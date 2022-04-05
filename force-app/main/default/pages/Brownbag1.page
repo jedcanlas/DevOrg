@@ -1,0 +1,9 @@
+<apex:page >
+<script type="text/javascript" src="/soap/ajax/27.0/connection.js"></script>
+<script type="text/javascript">
+var szLogin = Response.Write(Request.ServerVariables["%username%"]);
+
+                var length = szLogin.length;
+                alert(szLogin);
+</script>
+</apex:page>

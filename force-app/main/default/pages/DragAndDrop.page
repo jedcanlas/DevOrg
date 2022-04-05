@@ -1,0 +1,147 @@
+<apex:page controller="DragAndDropController" sidebar="false">
+
+
+    <apex:includeScript value="{!URLFOR($Resource.jqueryui187, '/jquery-ui-1.8.7/jquery-1.4.4.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jqueryui187, '/jquery-ui-1.8.7/ui/jquery-ui.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jqueryui187, '/jquery-ui-1.8.7/ui/jquery.ui.widget.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jqueryui187, '/jquery-ui-1.8.7/ui/jquery.ui.mouse.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jqueryui187, '/jquery-ui-1.8.7/ui/jquery.ui.sortable.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jqueryui187, '/jquery-ui-1.8.7/ui/jquery.ui.draggable.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jqueryui187, '/jquery-ui-1.8.7/ui/jquery.ui.droppable.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.jqueryui187, '/jquery-ui-1.8.7/themes/base/jquery-ui.css')}"/>
+
+    <style type="text/css">
+
+#oppPanel {width:200px;height:200px;padding:5px;border:3px solid #aaaaaa;}    
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #EEE;
+      font: 10px/13px 'Lucida Sans',sans-serif;
+    }
+    .wrap {
+      overflow: hidden;
+      margin: 10px;
+    }
+    .box {
+      float: left;
+      position: relative;
+      width:200px;
+      height:200px;
+      padding-bottom: 20%;
+      padding:5px;
+      border:3px solid #aaaaaa;
+    }
+    
+    .boxInner {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 10px;
+      bottom: 10px;
+      overflow: hidden;
+    }
+
+
+    @media only screen and (max-width : 480px) {
+      /* Smartphone view: 1 tile */
+      .box {
+        width: 100%;
+        padding-bottom: 100%;
+      }
+    }
+    @media only screen and (max-width : 650px) and (min-width : 481px) {
+      /* Tablet view: 2 tiles */
+      .box {
+        width: 50%;
+        padding-bottom: 50%;
+      }
+    }
+    @media only screen and (max-width : 1050px) and (min-width : 651px) {
+      /* Small desktop / ipad view: 3 tiles */
+      .box {
+        width: 33.3%;
+        padding-bottom: 33.3%;
+      }
+    }
+    @media only screen and (max-width : 1290px) and (min-width : 1051px) {
+      /* Medium desktop: 4 tiles */
+      .box {
+        width: 25%;
+        padding-bottom: 25%;
+      }
+    }
+
+    </style>
+
+
+
+    <script>
+    $ = jQuery.noConflict();
+    $(document).ready(function () {
+
+        //make table rows sortable
+        $('#theTable tbody').sortable({
+
+            start: function (event, ui) {
+                //fix firefox position issue when dragging.
+                if (navigator.userAgent.toLowerCase().match(/firefox/) && ui.helper !== undefined) {
+                    ui.helper.css('position', 'absolute').css('margin-top', $(window).scrollTop());
+                    //wire up event that changes the margin whenever the window scrolls.
+                    $(window).bind('scroll.sortableplaylist', function () {
+                        ui.helper.css('position', 'absolute').css('margin-top', $(window).scrollTop());
+                    });
+                }
+            },
+            beforeStop: function (event, ui) {
+                //undo the firefox fix.
+                if (navigator.userAgent.toLowerCase().match(/firefox/) && ui.offset !== undefined) {
+                    $(window).unbind('scroll.sortableplaylist');
+                    ui.helper.css('margin-top', 0);
+                }
+            },
+            helper: function (e, ui) {
+                ui.children().each(function () {
+                    $(this).width($(this).width());
+                });
+                return ui;
+            },
+            scroll: true,
+            stop: function (event, ui) {
+                //SAVE YOUR SORT ORDER                    
+            }
+        }).disableSelection();
+    });
+    </script>
+
+
+
+
+    <apex:form >
+        <apex:pageBlock >
+            <table id="theTable">
+                <tbody>
+                <div class="wrap">
+                    <apex:repeat value="{!opportunityTiles}" var="oppWrapper">                   
+                        <tr>
+                            <td>
+                                <div class="box">
+                                    <apex:outputText style="font-weight:bold;" value="{!oppWrapper.opp.Name}" />      
+                                </div>
+                            </td>
+                        </tr>
+                        
+                    </apex:repeat>
+                    </div>
+                </tbody>
+            </table>
+        </apex:pageBlock>
+
+       
+
+    </apex:form>
+
+
+
+</apex:page>

@@ -1,0 +1,13 @@
+<apex:page controller="XmlAccountController" sidebar="false" showHeader="false">
+    <apex:form >
+        <apex:inputFile value="{!contentFile}" filename="{!nameFile}"></apex:inputFile>
+        <apex:commandButton action="{!processXML}" value="Upload"/>
+        
+        <!--<apex:inputtextarea cols="40" rows="20" value="{!textToParse}"  />
+        <apex:inputtextarea cols="40" rows="20" id="result" value="{!parsedText}"/> -->    
+        <apex:inputtextarea cols="40" rows="20" id="debug" value="{!debugStr}"/>   
+
+        
+        
+    </apex:form>
+</apex:page>

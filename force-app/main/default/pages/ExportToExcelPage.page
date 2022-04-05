@@ -1,0 +1,24 @@
+<apex:page controller="ExportController" contentType="application/vnd.ms-excel#{!FileName}">
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!lstwrapper}" var="x">
+            <apex:column headerValue="accName">
+                {!x.accName}
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+
+
+
+    <table>
+        <tr>
+            <th>Test1</th>
+            <th>Test2</th>
+        </tr>
+        <tr>
+            <td bgcolor="#FF0000">Test Color</td>
+            <td bgcolor="#00FF00">Test Color 2</td>
+        </tr>
+    </table>
+
+
+</apex:page>
