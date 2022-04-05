@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Jed Canlas - DNATA
  * @group             : 
- * @last modified on  : 05-26-2021
+ * @last modified on  : 04-05-2022
  * @last modified by  : Jed Canlas - DNATA
  * Modifications Log 
  * Ver   Date         Author               Modification
@@ -13,7 +13,7 @@ public class AccountContactDataTableController {
 	public static List<Contact> getAccountContacts (Id recordId){
 
 		List<Contact> contacts = [SELECT FirstName, LastName, Email FROM Contact limit 10];
-		//112213213
+		//test
 		return contacts;
 		//2212
 	}
