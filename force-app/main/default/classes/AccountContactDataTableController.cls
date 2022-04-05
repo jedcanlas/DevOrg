@@ -15,7 +15,7 @@ public class AccountContactDataTableController {
 		List<Contact> contacts = [SELECT FirstName, LastName, Email FROM Contact limit 10];
 		//test
 		return contacts;
-		//2212
+		//qq
 	}
 
 }
