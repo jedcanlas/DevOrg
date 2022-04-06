@@ -14,6 +14,7 @@ public class AccountContactDataTableController {
 
 		List<Contact> contacts = [SELECT FirstName, LastName, Email FROM Contact limit 10];
 		return contacts;
+		//1
 	}
 
 }
